@@ -14,7 +14,7 @@ function razuna_media_buttons($context) {
 	$uploading_iframe_ID = (int) (0 == $post_ID ? $temp_ID : $post_ID);
 
 	$media_upload_iframe_src = "media-upload.php?post_id=$uploading_iframe_ID";
-	$out = ' <a href="'.$media_upload_iframe_src.'&tab=razuna&TB_iframe=true&height=496&width=640" class="thickbox" title="'.$image_title.'"><img src="'.$image_btn.'" alt="'.$image_title.'" /></a>';
+	$out = ' <a href="'.$media_upload_iframe_src.'&tab=razuna&TB_iframe=true" class="thickbox" title="'.$image_title.'"><img src="'.$image_btn.'" alt="'.$image_title.'" /></a>';
 	return $context.$out;
 }
 
@@ -22,17 +22,7 @@ function media_upload_razuna() {
 	return wp_iframe('media_upload_razuna_form', $errors );
 }
 
-function media_upload_razuna_form() {
-	$razuna_api = new RazunaAPI(get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false);
-
-	try {
-		if($_SESSION['razuna-sessiontoken'] == '') {
-			$razuna_api->login();
-			$_SESSION['razuna-sessiontoken'] = $razuna_api->get_session_token();
-		} else {
-			$razuna_api->set_session_token($_SESSION['razuna-sessiontoken']);
-		}
-	?>
+function media_upload_razuna_form() {?>
 	<div id="razuna_media_wrapper">
 		<form>
 			<div id="file_browser"></div>
@@ -41,23 +31,15 @@ function media_upload_razuna_form() {
 	<div id="razuna_file_info"></div>
 	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>razuna_media_manager.js"></script>
 	<script type="text/javascript">
-	jQuery(document).ready( function() {
-	    jQuery('#file_browser').fileTree({
-	        script: '<?php _e(razuna_plugin_url()); ?>razuna-file-tree.php',
-			loadMessage: 'Logging into the Razuna service...',
-	    });
-	});
+		jQuery(document).ready( function() {
+		    jQuery('#file_browser').fileTree({
+		        script: '<?php _e(razuna_plugin_url()); ?>razuna-file-tree.php',
+				loadMessage: 'Logging into the Razuna service...',
+				collapseSpeed: 500,
+		    });
+		});
 	</script>
 	<?php
-	} catch(RazunaAccessDeniedException $e) {
-	?>
-	<form>
-		<div id="message" class="error">
-			<p><strong>Access Denied, check settings</strong></p>
-		</div>
-	</form>
-	<?php
-	}
 }
 
 function razuna_media_css() {
@@ -72,14 +54,14 @@ function razuna_media_css() {
 			white-space: nowrap;
 		}
 
-		UL.jqueryFileTree A {
+		UL.jqueryFileTree A.asset {
 			color: #333;
 			text-decoration: none;
 			display: block;
 			padding: 0px 2px;
 		}
 
-		UL.jqueryFileTree A:hover {
+		UL.jqueryFileTree A.asset:hover {
 			background: #BDF;
 		}
 
@@ -98,12 +80,16 @@ function razuna_media_css() {
 			top: 0;
 			position: absolute;
 		}
-		
-		#razuna_file_info {
-			position: absolute;
-			bottom: 0;
-			height: 150px;
-			display: none;
+		.asset_info, .asset_info table { width: 100%; }
+		.asset_info table { border: 1px solid #DFDFDF; }
+		.asset_info td { vertical-align: top; }
+		.asset_info .image-size-item { width: 30%; float: left; }
+		.describe input[type=\"text\"] { width: 100%; }
+		.razuna_link_text_empty_error { color: red; display: none; font-size: 80%; }
+		.razuna_setting_to_shared_message { font-size: 80%; display: none; }
+		.razuna_share_loading { display: none; }
+		.razuna_share_answer {
+			display: inline;
 		}
 	</style>";
 }

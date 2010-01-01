@@ -28,7 +28,7 @@ if(jQuery) (function($){
 				}
 				
 				function bindTree(t) {
-					$(t).find('LI A').bind(o.folderEvent, function() {
+					$(t).find('LI A.asset').bind(o.folderEvent, function() {
 						if( $(this).parent().hasClass('directory') ) {
 							if( $(this).parent().hasClass('collapsed') ) {
 								// Expand
@@ -37,7 +37,6 @@ if(jQuery) (function($){
 									$(this).parent().parent().find('LI.directory').removeClass('expanded').addClass('collapsed');
 								}
 								$(this).parent().find('UL').remove(); // cleanup
-								//showTree( $(this).parent(), escape($(this).attr('rel').match( /.*\// )) );
 								showTree($(this).parent(), escape($(this).attr('rel')));
 								$(this).parent().removeClass('collapsed').addClass('expanded');
 							} else {
@@ -46,12 +45,19 @@ if(jQuery) (function($){
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
-							h($(this).attr('rel'));
+							if($(this).parent().find('div.asset_info').hasClass('expanded')) {
+								$(this).parent().find('div.asset_info').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
+								$(this).parent().find('div.asset_info').removeClass('expanded').addClass('collapsed');
+							} else {
+								$('div.asset_info').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
+								$(this).parent().find('div.asset_info').slideDown({ duration: o.collapseSpeed, easing: o.collapseEasing });
+								$(this).parent().find('div.asset_info').removeClass('collapsed').addClass('expanded');
+							}
 						}
 						return false;
 					});
 					// Prevent A from triggering the # on non-click events
-					if( o.folderEvent.toLowerCase != 'click' ) $(t).find('LI A').bind('click', function() { return false; });
+					//if( o.folderEvent.toLowerCase != 'click' ) $(t).find('LI A').bind('click', function() { return false; });
 				}
 				// Loading message
 				$(this).html('<ul class="jqueryFileTree start"><li class="wait">' + o.loadMessage + '<li></ul>');
@@ -62,3 +68,79 @@ if(jQuery) (function($){
 	});
 	
 })(jQuery);
+
+function razuna_insert(button) {
+	div = jQuery(button).parents().find('.asset_info');
+	id = jQuery(div).find('.razuna-file-id').val();
+	type = jQuery(div).find('.razuna-file-kind').val();
+	
+	content = '';
+	if(type == 'img') {
+		content = razuna_build_img_code(div);
+	} else {
+		content = jQuery(div).find('.link-text').val();
+		if(content == '') {
+			jQuery(div).find('#razuna_link_text_empty_error-' + id).show();
+			return false;
+		}
+	}
+	linkTag = razuna_build_link_code(div, type, content);
+	
+	if(jQuery(div).find('.razuna-file-shared').val() == 'f') {
+		jQuery(div).find('#razuna_setting_to_shared_message-' + id).attr('style', 'display: inline;');
+		return false;
+	}
+	
+	var win = window.dialogArguments || opener || parent || top;
+	if (typeof win.send_to_editor == 'function') {
+		win.send_to_editor(linkTag);
+		if (typeof win.tb_remove == 'function') 
+			win.tb_remove();
+		return false;
+	}
+	tinyMCE = win.tinyMCE;
+	if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('content') ) {
+		tinyMCE.selectedInstance.getWin().focus();
+		tinyMCE.execCommand('mceInsertContent', false, linkTag);
+	} else win.edInsertContent(win.edCanvas, linkTag);
+
+	return false;
+}
+
+function razuna_build_img_code(div) {
+	imgTag = "<img src=\"";
+	
+	if(jQuery(div).find('.image-size-original').is(':checked')) {
+		imgTag += jQuery(div).find('.razuna-file-original').val();
+	} else {
+		imgTag += jQuery(div).find('.razuna-file-thumbnail').val();
+	}
+	imgTag += "\"" + " alt=\"" + jQuery(div).find('.alt').val() + "\"";
+	
+	imgTag += " />";
+	return imgTag;
+}
+
+function razuna_build_link_code(div, type, content) {
+	linkTag = "<a href=\"";
+	
+	if(type == 'img') {
+		if(jQuery(div).find('.urlfield').val() == '') {
+			return content;
+		}
+		linkTag += jQuery(div).find('.urlfield').val();
+	} else {
+		linkTag += jQuery(div).find('.razuna-file-original').val();
+	}
+	
+	linkTag += "\">" + content + "</a>";
+	return linkTag;
+}
+
+function razuna_share_item(element) {
+	div = jQuery(element).parents().find('.asset_info');
+	id = jQuery(div).find('.razuna-file-id').val();
+	
+	jQuery("#razuna_share_answer-" + id).hide();
+	jQuery("#razuna_share_loading-" + id).show();
+}

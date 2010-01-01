@@ -1,6 +1,7 @@
 <?php
 
 class RazunaAccessDeniedException extends Exception { }
+class RazunaNotAvailableException extends Exception { }
 
 class RazunaAPI {
 	
@@ -19,8 +20,13 @@ class RazunaAPI {
 	}
 	
 	public function login() {
-		$client = new SoapClient($this->soap_base . 'authentication.cfc?wsdl');
-		$result = $client->loginhost($this->config_host, $this->config_username, $this->config_password, $this->config_passhashed);
+		try {
+			$client = new SoapClient($this->soap_base . 'authentication.cfc?wsdl');
+			$result = $client->loginhost($this->config_host, $this->config_username, $this->config_password, $this->config_passhashed);
+		} catch(SoapFault $e) {
+			throw new RazunaNotAvailableException();
+			return;
+		}
 		$xml_result = simplexml_load_string($result);
 		if($xml_result->responsecode == 0) {
 			$this->session_token = (string)$xml_result->sessiontoken;
@@ -30,10 +36,15 @@ class RazunaAPI {
 	}
 	
 	public function list_files($parent_id) {
-		$client = new SoapClient($this->soap_base . 'folder.cfc?wsdl');
-		
-		// get folders
-		$result = $client->getfolders($this->session_token, $parent_id, 0);
+		try {
+			$client = new SoapClient($this->soap_base . 'folder.cfc?wsdl');
+			
+			// get folders
+			$result = $client->getfolders($this->session_token, $parent_id, 0);
+		} catch(SoapFault $e) {
+			throw new RazunaNotAvailableException();
+			return;
+		}
 		$xml_result = simplexml_load_string($result);
 		
 		if($this->is_session_timed_out($xml_result)) {
@@ -51,7 +62,12 @@ class RazunaAPI {
 		}
 		
 		// get files
-		$result = $client->getassets($this->session_token, $parent_id, 1, 0, 0, 'all');
+		try {
+			$result = $client->getassets($this->session_token, $parent_id, 1, 0, 0, 'all');
+		} catch(SoapFault $e) {
+			throw new RazunaNotAvailableException();
+			return;
+		}
 		$xml_result = simplexml_load_string($result);
 		
 		if($this->is_session_timed_out($xml_result)) {
@@ -62,7 +78,7 @@ class RazunaAPI {
 		
 		if($xml_result->responsecode == 0) {
 			foreach($xml_result->listassets->asset as $xml_asset) {
-				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (boolean)$xml_asset->shared, (string)$xml_asset->url, (string)$xml_asset->thumbnail, (int)$xml_asset->folderid);
+				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (($xml_asset->shared == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->thumbnail, (int)$xml_asset->folderid);
 				$files_arr[] = $asset;
 			}
 		}
@@ -109,7 +125,7 @@ class RazunaAsset {
 	private $id;
 	private $kind;
 	private $name;
-	private $shared;
+	private $shared = false;
 	private $url;
 	private $thumbnail;
 	private $folder_id;
@@ -142,9 +158,9 @@ class RazunaAsset {
 	public function get_kind_description() {
 		if($this->kind == 'img')
 			return "Image";
-		else if($this->kind = 'vid')
+		else if($this->kind == 'vid')
 			return "Video";
-		else if($this->kind = 'doc')
+		else if($this->kind == 'doc')
 			return "Document";
 		else
 			return $this->kind;
