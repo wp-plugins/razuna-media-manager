@@ -4,7 +4,7 @@ Donate link: http://example.com/
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
 Requires at least: 2.9
 Tested up to: 2.9
-Stable tag: trunk
+Stable tag: 0.4
 
 Allows to add Files from your Razuna account into Wordpress posts.
 
