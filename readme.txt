@@ -20,6 +20,7 @@ In a future version it will also allow you to upload files to your Razuna servic
 For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source software at http://www.razuna.org
 
 **Planned Features**
+
 * Automatic-sharing when inserting a private asset
 * Upload files & File management
 
