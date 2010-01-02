@@ -84,11 +84,12 @@ try {
 									<span class="razuna_link_text_empty_error" id="razuna_link_text_empty_error-<?php _e($file->get_id()); ?>">The Link Text is empty.</span>
 									<span class="razuna_setting_to_shared_message" id="razuna_setting_to_shared_message-<?php _e($file->get_id()); ?>">
 										<br />
-										<i>
+										<i>This asset needs to be shared, automatic sharing is a feature of the next version of this plugin.<br />Please login to your Razuna service and share the asset.</i>
+										<!--><i>
 											This asset needs to be shared, do you want to share this asset?
 											<a href="#insert" onclick="razuna_share_item(this);" class="razuna_share_answer" id="razuna_share_answer-<?php _e($file->get_id()); ?>">Yes</a>
 										</i>
-										<span class="razuna_share_loading" id="razuna_share_loading-<?php _e($file->get_id()); ?>"><img src="<?php _e(razuna_plugin_url()); ?>img/spinner.gif" /></span>
+										<span class="razuna_share_loading" id="razuna_share_loading-<?php _e($file->get_id()); ?>"><img src="<?php _e(razuna_plugin_url()); ?>img/spinner.gif" /></span>-->
 									</span>
 								</td>
 							</tr>
