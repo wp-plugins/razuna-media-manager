@@ -4,7 +4,7 @@ Donate link: http://example.com/
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
 Requires at least: 2.9
 Tested up to: 2.9
-Stable tag: 0.4.1
+Stable tag: 0.4.2
 
 Allows to add Files from your Razuna account into Wordpress posts.
 
@@ -24,8 +24,19 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 * Automatic-sharing when inserting a private asset
 * Upload files & File management
 
+== Screenshots ==
+
+1. Configuration page
+2. Media Manager integration
+
+== Changelog ==
+
+= 0.4.2 =
+* First public version
+* Allows to add shared images, videos and documents which are hosted on a Razuna service to your posts
+
 == Installation ==
 
 1. Upload `razuna-media-media-manager` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Configure the plugin in the 'Razuna Configuration' (or 'Settings') screen by following the onscreen prompts.
+1. Activate the plugin through the "Plugins" menu in Wordpress
+1. Configure the plugin in the "Razuna Configuration" (or "Settings") screen by following the onscreen prompts.
