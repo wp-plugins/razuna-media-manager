@@ -10,8 +10,6 @@ Allows to add Files from your Razuna account into Wordpress posts.
 
 == Description ==
 
-**THIS PLUGIN IS UNDER HEAVY DEVELOPMENT AND NOT YET READY TO USE**
-
 This Wordpress Plugin allows you to use any hosted Razuna service to host your media for your Wordpress powered blog.
 
 Once installed and configured, this plugin transparently integrates with your Wordpress blog.
@@ -20,6 +18,10 @@ You will find a "Razuna" Tab next to your regular "Upload" and "Media Library" t
 In a future version it will also allow you to upload files to your Razuna service.
 
 For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source software at http://www.razuna.org
+
+**Planned Features**
+* Automatic-sharing when inserting a private asset
+* Upload files & File management
 
 == Installation ==
 
