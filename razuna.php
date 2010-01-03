@@ -1,4 +1,5 @@
 <?php
+
 /*
 Plugin Name: Razuna Media Manager
 Plugin URI: http://chdorner.com/projects/2010/razuna-media-manager.html
@@ -6,6 +7,22 @@ Description: Allows to add Files from your Razuna account into Wordpress posts.
 Version: 0.4.2
 Author: Christof Dorner
 Author URI: http://chdorner.com
+
+Copyright (C) 2010 Christof Dorner
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 */
 
 require_once('RazunaAPI.class.php');
