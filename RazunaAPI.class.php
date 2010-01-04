@@ -95,7 +95,7 @@ class RazunaAPI {
 		
 		if($xml_result->responsecode == 0) {
 			foreach($xml_result->listassets->asset as $xml_asset) {
-				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (($xml_asset->shared == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->thumbnail, (int)$xml_asset->folderid);
+				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->thumbnail, (int)$xml_asset->folderid);
 				$files_arr[] = $asset;
 			}
 		}
