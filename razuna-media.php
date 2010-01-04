@@ -46,6 +46,9 @@ function media_upload_razuna_form() {?>
 		</form>
 	</div>
 	<div id="razuna_file_info"></div>
+	<script type="text/javascript">
+		var razuna_plugin_url = '<?php _e(razuna_plugin_url()); ?>';
+	</script>
 	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>razuna_media_manager.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready( function() {
