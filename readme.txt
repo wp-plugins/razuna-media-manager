@@ -4,7 +4,7 @@ Donate link: http://example.com/
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
 Requires at least: 2.9
 Tested up to: 2.9
-Stable tag: 0.4.2
+Stable tag: 0.5.0
 
 Allows to add Files from your Razuna account into Wordpress posts.
 
@@ -21,7 +21,6 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 
 **Planned Features**
 
-* Automatic-sharing when inserting a private asset
 * Upload files & File management
 
 == Screenshots ==
@@ -30,6 +29,10 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 2. Media Manager integration
 
 == Changelog ==
+
+= 0.5.0 =
+* Fixed an issue where some shared items were displayed as private
+* New Feature: Automatic sharing of an asset when inserting into a blog post
 
 = 0.4.2 =
 * First public version
