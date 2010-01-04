@@ -19,8 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 $_POST['dir'] = urldecode($_POST['dir']);
 
-require_once('../../../wp-load.php');
-require_once('razuna.php');
+require_once('../../../../wp-load.php');
+require_once('../razuna.php');
 $razuna_api = new RazunaAPI(get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false);
 
 try {

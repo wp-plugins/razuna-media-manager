@@ -50,7 +50,7 @@ function media_upload_razuna_form() {?>
 	<script type="text/javascript">
 		jQuery(document).ready( function() {
 		    jQuery('#file_browser').fileTree({
-		        script: '<?php _e(razuna_plugin_url()); ?>razuna-file-tree.php',
+		        script: '<?php _e(razuna_plugin_url()); ?>ajax/razuna-file-tree.php',
 				loadMessage: 'Logging into the Razuna service...',
 				collapseSpeed: 500,
 		    });
