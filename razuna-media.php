@@ -108,6 +108,7 @@ function razuna_media_css() {
 		.razuna_link_text_empty_error { color: red; display: none; font-size: 80%; }
 		.razuna_setting_to_shared_message { font-size: 80%; display: none; }
 		.razuna_share_loading { display: none; }
+		.razuna_share_failed { display: none; color: red; padding-left: 4px; }
 		.razuna_share_answer {
 			display: inline;
 		}

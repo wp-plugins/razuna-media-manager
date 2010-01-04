@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 $_POST['dir'] = urldecode($_POST['dir']);
+$_POST['assetid'] = urldecode($_POST['assetid']);
+$_POST['assetkind'] = urldecode($_POST['assetkind']);
 
 require_once('../../../../wp-load.php');
 require_once('../razuna.php');
@@ -30,5 +32,26 @@ try {
 	} else {
 		$razuna_api->set_session_token($_SESSION['razuna-sessiontoken']);
 	}
+	
+	if($razuna_api->set_asset_shared($_POST['assetid'], $_POST['assetkind'])) {
+		$asset = $razuna_api->get_asset($_POST['dir'], $_POST['assetid']);
+		$array = array("status" => "ok", "thumbnail" => $asset->get_thumbnail(), "original" => $asset->get_url());
+	} else {
+		$array = array("status" => "failed");
+	}
+	_e(json_encode($array));
+} catch(RazunaAccessDeniedException $e) {
+?>
+<div id="message" class="error">
+	<p><strong>Access Denied, check settings</strong></p>
+</div>
+<?php
+} catch(RazunaNotAvailableException $e) {
+?>
+<div id="message" class="error">
+	<p><strong>Razuna service is not available at the moment</strong></p>
+</div>
+<?php
+}
 	
 ?>

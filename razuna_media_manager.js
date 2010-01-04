@@ -39,26 +39,26 @@ if(jQuery) (function($){
 						$(c).find('.start').html('');
 						$(".jqueryFileTree.start").remove();
 						$(c).removeClass('wait').append(data);
-						if( o.root == t ) $(c).find('UL:hidden').show(); else $(c).find('UL:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
+						if( o.root == t ) $(c).find('ul:hidden').show(); else $(c).find('ul:hidden').slideDown({ duration: o.expandSpeed, easing: o.expandEasing });
 						bindTree(c);
 					});
 				}
 				
 				function bindTree(t) {
-					$(t).find('LI A.asset').bind(o.folderEvent, function() {
+					$(t).find('li a.asset').bind(o.folderEvent, function() {
 						if( $(this).parent().hasClass('directory') ) {
 							if( $(this).parent().hasClass('collapsed') ) {
 								// Expand
 								if( !o.multiFolder ) {
-									$(this).parent().parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
-									$(this).parent().parent().find('LI.directory').removeClass('expanded').addClass('collapsed');
+									$(this).parent().parent().find('ul').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
+									$(this).parent().parent().find('li.directory').removeClass('expanded').addClass('collapsed');
 								}
-								$(this).parent().find('UL').remove(); // cleanup
+								$(this).parent().find('ul').remove(); // cleanup
 								showTree($(this).parent(), escape($(this).attr('rel')));
 								$(this).parent().removeClass('collapsed').addClass('expanded');
 							} else {
 								// Collapse
-								$(this).parent().find('UL').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
+								$(this).parent().find('ul').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
 								$(this).parent().removeClass('expanded').addClass('collapsed');
 							}
 						} else {
@@ -91,6 +91,11 @@ function razuna_insert(button) {
 	id = jQuery(div).find('.razuna-file-id').val();
 	type = jQuery(div).find('.razuna-file-kind').val();
 	
+	if(jQuery(div).find('.razuna-file-shared').val() == 'f') {
+		jQuery(div).find('#razuna_setting_to_shared_message-' + id).attr('style', 'display: inline;');
+		return false;
+	}
+	
 	content = '';
 	if(type == 'img') {
 		content = razuna_build_img_code(div);
@@ -102,11 +107,6 @@ function razuna_insert(button) {
 		}
 	}
 	linkTag = razuna_build_link_code(div, type, content);
-	
-	if(jQuery(div).find('.razuna-file-shared').val() == 'f') {
-		jQuery(div).find('#razuna_setting_to_shared_message-' + id).attr('style', 'display: inline;');
-		return false;
-	}
 	
 	var win = window.dialogArguments || opener || parent || top;
 	if (typeof win.send_to_editor == 'function') {
@@ -157,7 +157,31 @@ function razuna_build_link_code(div, type, content) {
 function razuna_share_item(element) {
 	div = jQuery(element).parents().find('.asset_info');
 	id = jQuery(div).find('.razuna-file-id').val();
+	kind = jQuery(div).find('.razuna-file-kind').val();
+	dir = jQuery(div).find('.razuna-file-dir').val();
 	
 	jQuery("#razuna_share_answer-" + id).hide();
 	jQuery("#razuna_share_loading-" + id).show();
+	
+	script = razuna_plugin_url + "ajax/razuna-file-share.php";
+	jQuery.post(script, { assetid: id, assetkind: kind, dir: dir }, function(data) {
+		if(data.status == "ok") {
+			// check if link needs to be replaced
+			urlfield = jQuery(div).find('.urlfield').val();
+			private_url = jQuery(div).find('.razuna-file-original').val();
+			if(urlfield == private_url) {
+				jQuery(div).find('.urlfield').val(data.original);
+			}
+			
+			jQuery(div).find('.razuna-file-original').val(data.original);
+			jQuery(div).find('.razuna-file-thumbnail').val(data.thumbnail);
+			jQuery(div).find('.razuna-file-shared').val('t');
+			
+			razuna_insert(jQuery(div).find('.insert_into_post'));
+		} else {
+			jQuery(div).find('.razuna_share_loading').hide();
+			jQuery(div).find('.razuna_share_failed').show();
+		}
+	}, "json");
+	
 }
