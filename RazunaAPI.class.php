@@ -103,6 +103,50 @@ class RazunaAPI {
 		return $files_arr;
 	}
 	
+	public function get_asset($dir, $id) {
+		try {
+			$client = new SoapClient($this->soap_base . 'folder.cfc?wsdl');
+			$result = $client->getassets($this->session_token, $dir, 1, 0, 0, 'all');
+		} catch(SoapFault $e) {
+			throw new RazunaNotAvailableException();
+			return;
+		}
+		$xml_result = simplexml_load_string($result);
+		
+		if($this->is_session_timed_out($xml_result)) {
+			$this->login();
+			$result = $client->getfolders($this->session_token, $dir, 0);
+			$xml_result = simplexml_load_string($result);
+		}
+		
+		if($xml_result->responsecode == 0) {
+			foreach($xml_result->listassets->asset as $xml_asset) {
+				if(((int)$xml_asset->id) == $id) {
+					$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (($xml_asset->shared == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->thumbnail, (int)$xml_asset->folderid);
+					return $asset;
+				}
+			}
+			return false;
+		}
+		
+		return false;
+	}
+	
+	public function set_asset_shared($asset_id, $asset_type) {
+		try {
+			$client = new SoapClient($this->soap_base . 'asset.cfc?wsdl');
+			$result = $client->setshared($this->session_token, $asset_id, $asset_type, 1);
+		} catch(SoapFault $e) {
+			throw new RazunaNotAvailableException();
+			return;
+		}
+		$xml_result = simplexml_load_string($result);
+		if($xml_result->responsecode == 0) {
+			return true;
+		}
+		return false;
+	}
+	
 	protected function is_session_timed_out($xml_result) {
 		return ($xml_result->responsecode == '1' && $xml_result->message == 'Session timeout');
 	}
