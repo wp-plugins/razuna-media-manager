@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: chdorner
-Donate link: http://example.com/
+Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=CK3SHKRLZ9XAY&lc=CH&item_name=Razuna%20Wordpress%20Plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
 Requires at least: 2.9
 Tested up to: 2.9
