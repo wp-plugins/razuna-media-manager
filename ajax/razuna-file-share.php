@@ -25,6 +25,8 @@ require_once('../../../../wp-load.php');
 require_once('../razuna.php');
 $razuna_api = new RazunaAPI(get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false);
 
+$response = array('status' => '0');
+
 try {
 	if($_SESSION['razuna-sessiontoken'] == '') {
 		$razuna_api->login();
@@ -35,23 +37,16 @@ try {
 	
 	if($razuna_api->set_asset_shared($_POST['assetid'], $_POST['assetkind'])) {
 		$asset = $razuna_api->get_asset($_POST['dir'], $_POST['assetid']);
-		$array = array("status" => "ok", "thumbnail" => $asset->get_thumbnail(), "original" => $asset->get_url());
+		$response['obj'] = json_encode2($asset);
 	} else {
-		$array = array("status" => "failed");
+		throw new Exception();
 	}
-	_e(json_encode($array));
-} catch(RazunaAccessDeniedException $e) {
-?>
-<div id="message" class="error">
-	<p><strong>Access Denied, check settings</strong></p>
-</div>
-<?php
-} catch(RazunaNotAvailableException $e) {
-?>
-<div id="message" class="error">
-	<p><strong>Razuna service is not available at the moment</strong></p>
-</div>
-<?php
+	
+} catch(Exception $e) {
+	$response['status'] = '1';
+	$response['exception'] = get_class($e);
 }
+
+_e(json_encode($response));
 	
 ?>

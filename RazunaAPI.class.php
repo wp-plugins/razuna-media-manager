@@ -73,7 +73,7 @@ class RazunaAPI {
 		if($xml_result->responsecode == 0) {
 			foreach($xml_result->listfolders->folder as $xml_folder) {
 				$folder = new RazunaFolder((int)$xml_folder->folderid, (string)$xml_folder->foldername);
-				if($parent_id != $folder->get_id())
+				if($parent_id != $folder->id)
 					$files_arr[] = $folder;
 			}
 		}
@@ -168,28 +168,25 @@ class RazunaAPI {
 }
 
 class RazunaFolder {
-	private $id;
-	private $name;
+	public $id;
+	public $name;
 	
 	function __construct($id, $name) {
 		$this->id = $id;
 		$this->name = $name;
 	}
-	
-	public function get_id() { return $this->id; }
-	public function set_id($id) { $this->id = $id; }
-	public function get_name() { return $this->name; }
-	public function set_name($name) { $this->name = $name; }
 }
 
 class RazunaAsset {
-	private $id;
-	private $kind;
-	private $name;
-	private $shared = false;
-	private $url;
-	private $thumbnail;
-	private $folder_id;
+	public $id;
+	public $kind;
+	public $kind_description;
+	public $name;
+	public $shared = false;
+	public $shared_description;
+	public $url;
+	public $thumbnail;
+	public $folder_id;
 	
 	function __construct($id, $kind, $name, $shared, $url, $thumbnail, $folder_id) {
 		$this->id = $id;
@@ -199,34 +196,27 @@ class RazunaAsset {
 		$this->url = $url;
 		$this->thumbnail = $thumbnail;
 		$this->folder_id = $folder_id;
+		
+		$this->set_kind_description();
+		$this->set_shared_description();
 	}
 	
-	public function get_id() { return $this->id; }
-	public function set_id($id) { $this->id = $id; }
-	public function get_kind() { return $this->kind; }
-	public function set_kind($kind) { $this->kind = $kind; }
-	public function get_name() { return $this->name; }
-	public function set_name($name) { $this->name = $name; }
-	public function is_shared() { return $this->shared; }
-	public function set_shared($shared) { $this->shared = $shared; }
-	public function get_url() { return $this->url; }
-	public function set_url($url) { $this->url = $url; }
-	public function get_thumbnail() { return $this->thumbnail; }
-	public function set_thumbnail($thumbnail) { $this->thumbnail = $thumbnail; }
-	public function get_folder_id() { return $this->folder_id; }
-	public function set_folder_id($folder_id) { $this->folder_id = $folder_id; }
-	
-	public function get_kind_description() {
+	public function set_kind_description() {
 		if($this->kind == 'img')
-			return "Image";
+			$this->kind_description = "Image";
 		else if($this->kind == 'vid')
-			return "Video";
+			$this->kind_description = "Video";
 		else if($this->kind == 'doc')
-			return "Document";
+			$this->kind_description = "Document";
 		else if($this->kind == 'aud')
-			return "Audio";
+			$this->kind_description = "Audio";
+	}
+	
+	public function set_shared_description() {
+		if($this->shared)
+			$this->shared_description = "Yes";
 		else
-			return $this->kind;
+			$this->shared_description = "No";
 	}
 }
 

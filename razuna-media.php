@@ -45,18 +45,12 @@ function media_upload_razuna_form() {?>
 			<div id="file_browser"></div>
 		</form>
 	</div>
-	<div id="razuna_file_info"></div>
-	<script type="text/javascript">
-		var razuna_plugin_url = '<?php _e(razuna_plugin_url()); ?>';
-	</script>
-	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>razuna_media_manager.js"></script>
+	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>razuna-media-manager.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready( function() {
-		    jQuery('#file_browser').fileTree({
-		        script: '<?php _e(razuna_plugin_url()); ?>ajax/razuna-file-tree.php',
-				loadMessage: 'Logging into the Razuna service...',
-				collapseSpeed: 500,
-		    });
+		    jQuery('#file_browser').razunaInit({
+				baseUrl: '<?php _e(razuna_plugin_url()); ?>'
+			});
 		});
 	</script>
 	<?php
@@ -65,8 +59,8 @@ function media_upload_razuna_form() {?>
 function razuna_media_css() {
 	echo "
 	<style type=\"text/css\">
-		UL.jqueryFileTree { padding: 0px; margin: 0px; }
-		UL.jqueryFileTree LI {
+		ul.razunaMediaBrowser { padding: 0px; margin: 0px; }
+		ul.razunaMediaBrowser li {
 			list-style: none;
 			padding: 0px;
 			padding-left: 20px;
@@ -74,26 +68,26 @@ function razuna_media_css() {
 			white-space: nowrap;
 		}
 
-		UL.jqueryFileTree A.asset {
+		ul.razunaMediaBrowser a.asset {
 			color: #333;
 			text-decoration: none;
 			display: block;
 			padding: 0px 2px;
 		}
 
-		UL.jqueryFileTree A.asset:hover {
+		ul.razunaMediaBrowser a.asset:hover {
 			background: #BDF;
 		}
 
 		/* Core Styles */
-		.jqueryFileTree LI.directory { background: url(" . razuna_plugin_url() . "img/directory.png) left top no-repeat; }
-		.jqueryFileTree LI.expanded { background: url(" . razuna_plugin_url() . "img/folder_open.png) left top no-repeat; }
-		.jqueryFileTree LI.file { background: url(" . razuna_plugin_url() . "img/file.png) left top no-repeat; }
-		.jqueryFileTree LI.wait { background: url(" . razuna_plugin_url() . "img/spinner.gif) left top no-repeat; }
+		.razunaMediaBrowser li.directory { background: url(" . razuna_plugin_url() . "img/directory.png) left top no-repeat; }
+		.razunaMediaBrowser li.expanded { background: url(" . razuna_plugin_url() . "img/folder_open.png) left top no-repeat; }
+		.razunaMediaBrowser li.file { background: url(" . razuna_plugin_url() . "img/file.png) left top no-repeat; }
+		.razunaMediaBrowser li.wait { background: url(" . razuna_plugin_url() . "img/spinner.gif) left top no-repeat; }
 		/* File Extensions*/
-		.jqueryFileTree LI.kind_vid { background: url(" . razuna_plugin_url() . "img/film.png) left top no-repeat; }
-		.jqueryFileTree LI.kind_img { background: url(" . razuna_plugin_url() . "img/picture.png) left top no-repeat; }
-		.jqueryFileTree LI.kind_doc { background: url(" . razuna_plugin_url() . "img/doc.png) left top no-repeat; }
+		.razunaMediaBrowser li.kind_vid { background: url(" . razuna_plugin_url() . "img/film.png) left top no-repeat; }
+		.razunaMediaBrowser li.kind_img { background: url(" . razuna_plugin_url() . "img/picture.png) left top no-repeat; }
+		.razunaMediaBrowser li.kind_doc { background: url(" . razuna_plugin_url() . "img/doc.png) left top no-repeat; }
 		
 		#razuna_media_wrapper {
 			width: 640px;
