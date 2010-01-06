@@ -223,6 +223,8 @@ class RazunaAsset {
 			return "Video";
 		else if($this->kind == 'doc')
 			return "Document";
+		else if($this->kind == 'aud')
+			return "Audio";
 		else
 			return $this->kind;
 	}
