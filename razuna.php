@@ -4,7 +4,7 @@
 Plugin Name: Razuna Media Manager
 Plugin URI: http://chdorner.com/projects/2010/razuna-media-manager.html
 Description: Allows to add Files from your Razuna account into Wordpress posts.
-Version: 0.5.0
+Version: 0.5.1
 Author: Christof Dorner
 Author URI: http://chdorner.com
 
@@ -33,6 +33,7 @@ require_once('razuna-media.php');
 function razuna_init() {
 	add_action('admin_menu', 'razuna_config_page');
 	add_action('admin_init', 'razuna_start_session');
+	add_action('admin_init', 'razuna_register_settings');
 }
 add_action('init', 'razuna_init');
 
@@ -40,6 +41,12 @@ function razuna_config_page() {
 	if(function_exists('add_submenu_page')) {
 		add_submenu_page('options-general.php', __('Razuna'), __('Razuna'), 'manage_options', 'razuna-config', 'razuna_config');
 	}
+}
+
+function razuna_register_settings() {
+	register_setting('razuna','razuna_hostname');
+	register_setting('razuna', 'razuna_username');
+	register_setting('razuna', 'razuna_password');
 }
 
 function razuna_start_session() {

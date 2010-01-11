@@ -27,7 +27,8 @@ function razuna_config() {
 		<h2>Razuna Configuration</h2>
 		
 		<form method="post" action="options.php">
-			<?php wp_nonce_field('update-options'); ?>
+			<?php settings_fields('razuna'); ?>
+			<?php do_settings_sections('razuna'); ?>
 		
 			<h3>Connection and Credentials</h3>
 		

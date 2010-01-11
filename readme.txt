@@ -2,9 +2,9 @@
 Contributors: chdorner
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=CK3SHKRLZ9XAY&lc=CH&item_name=Razuna%20Wordpress%20Plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
-Requires at least: 2.9
+Requires at least: 2.8.3
 Tested up to: 2.9
-Stable tag: 0.5.0
+Stable tag: 0.5.1
 
 Allows to add Files from your Razuna account into Wordpress posts.
 
@@ -29,6 +29,9 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 2. Media Manager integration
 
 == Changelog ==
+
+= 0.5.1 =
+* Fixed a bug Wordpress MU where the options page could not save the settings in
 
 = 0.5.0 =
 * Fixed an issue where some shared items were displayed as private
