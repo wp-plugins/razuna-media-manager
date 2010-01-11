@@ -31,7 +31,7 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 == Changelog ==
 
 = 0.5.1 =
-* Fixed a bug Wordpress MU where the options page could not save the settings in Wordpress MU
+* Fixed a bug where the options page could not save the settings in Wordpress MU
 
 = 0.5.0 =
 * Fixed an issue where some shared items were displayed as private
