@@ -428,7 +428,7 @@ class RazunaFolder {
 			self::__construct1($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7], $argv[8]);
 			break;
 		case 11:
-			self::__construct1($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7], $argv[8], $argv[9], $argv[10]);
+			self::__construct2($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7], $argv[8], $argv[9], $argv[10]);
 			break;
 		}
 	}
@@ -455,7 +455,7 @@ class RazunaFolder {
 		$this->total_document = $total_document;
 		$this->total_audio = $total_audio;
 		$this->owner = $owner;
-		$this->level = $leveL;
+		$this->level = $level;
 		$this->parent_id = $parent_id;
 	}
 	
