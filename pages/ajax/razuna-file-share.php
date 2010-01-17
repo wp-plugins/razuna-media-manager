@@ -18,29 +18,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 $_POST['dir'] = urldecode($_POST['dir']);
+$_POST['assetid'] = urldecode($_POST['assetid']);
+$_POST['assetkind'] = urldecode($_POST['assetkind']);
 
-require_once('../../../../wp-load.php');
-require_once('../razuna.php');
-$razuna_api = new RazunaAPI(get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false);
+require_once('../../../../../wp-load.php');
+require_once('../../razuna.php');
+$razuna_api = new Razuna(get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false, Razuna::HOST_TYPE_NAME);
 
 $response = array('status' => '0');
 
 try {
 	if($_SESSION['razuna-sessiontoken'] == '') {
 		$razuna_api->login();
-		$_SESSION['razuna-sessiontoken'] = $razuna_api->get_session_token();
+		$_SESSION['razuna-sessiontoken'] = $razuna_api->getSessionToken();
 	} else {
 		$razuna_api->set_session_token($_SESSION['razuna-sessiontoken']);
 	}
 	
-	$files_array = $razuna_api->list_files($_POST['dir']);
-	if(count($files_array) > 0) {
-		$response['files'] = array();
-		foreach($files_array as $file) {
-			$file_arr['type'] = get_class($file);
-			$file_arr['obj'] = json_encode2($file);
-			$response['files'][] = $file_arr;
-		}
+	if($razuna_api->setAssetShared($_POST['assetid'], $_POST['assetkind'], 1)) {
+		$asset = $razuna_api->getAsset($_POST['assetid'], $_POST['dir']);
+		$response['obj'] = json_encode2($asset);
+	} else {
+		throw new Exception();
 	}
 	
 } catch(Exception $e) {

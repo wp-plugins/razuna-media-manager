@@ -45,7 +45,7 @@ function media_upload_razuna_form() {?>
 			<div id="file_browser"></div>
 		</form>
 	</div>
-	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>razuna-media-manager.js"></script>
+	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready( function() {
 		    jQuery('#file_browser').razunaInit({
@@ -80,14 +80,14 @@ function razuna_media_css() {
 		}
 
 		/* Core Styles */
-		.razunaMediaBrowser li.directory { background: url(" . razuna_plugin_url() . "img/directory.png) left top no-repeat; }
-		.razunaMediaBrowser li.expanded { background: url(" . razuna_plugin_url() . "img/folder_open.png) left top no-repeat; }
-		.razunaMediaBrowser li.file { background: url(" . razuna_plugin_url() . "img/file.png) left top no-repeat; }
-		.razunaMediaBrowser li.wait { background: url(" . razuna_plugin_url() . "img/spinner.gif) left top no-repeat; }
+		.razunaMediaBrowser li.directory { background: url(" . razuna_plugin_url() . "pages/img/directory.png) left top no-repeat; }
+		.razunaMediaBrowser li.expanded { background: url(" . razuna_plugin_url() . "pages/img/folder_open.png) left top no-repeat; }
+		.razunaMediaBrowser li.file { background: url(" . razuna_plugin_url() . "pages/img/file.png) left top no-repeat; }
+		.razunaMediaBrowser li.wait { background: url(" . razuna_plugin_url() . "pages/img/spinner.gif) left top no-repeat; }
 		/* File Extensions*/
-		.razunaMediaBrowser li.kind_vid { background: url(" . razuna_plugin_url() . "img/film.png) left top no-repeat; }
-		.razunaMediaBrowser li.kind_img { background: url(" . razuna_plugin_url() . "img/picture.png) left top no-repeat; }
-		.razunaMediaBrowser li.kind_doc { background: url(" . razuna_plugin_url() . "img/doc.png) left top no-repeat; }
+		.razunaMediaBrowser li.kind_vid { background: url(" . razuna_plugin_url() . "pages/img/film.png) left top no-repeat; }
+		.razunaMediaBrowser li.kind_img { background: url(" . razuna_plugin_url() . "pages/img/picture.png) left top no-repeat; }
+		.razunaMediaBrowser li.kind_doc { background: url(" . razuna_plugin_url() . "pages/img/doc.png) left top no-repeat; }
 		
 		#razuna_media_wrapper {
 			width: 640px;

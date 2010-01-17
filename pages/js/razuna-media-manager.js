@@ -32,7 +32,7 @@ if(jQuery) (function($){
 				
 				function showTree(c, t) {
 					$(c).addClass('wait');
-					$.post(o.baseUrl + 'ajax/razuna-file-tree.php', { dir: t }, function(response) {
+					$.post(o.baseUrl + 'pages/ajax/razuna-file-tree.php', { dir: t }, function(response) {
 						if(!preProcessAPIRequest(response)) return false;
 						$(c).find('.start').html('');
 						$(".razunaMediaBrowser.start").remove();
@@ -77,6 +77,7 @@ if(jQuery) (function($){
 						if(error_messages[response.exception] != undefined) var message = error_messages[response.exception];
 						error = '<div id="message" class="error"><p><strong>' + message + '</strong></p></div>';
 						$('.razunaMediaBrowser').empty().append(error);
+						return false;
 					}
 					return true;
 				}
@@ -89,7 +90,7 @@ if(jQuery) (function($){
 							response += '<li class="directory collapsed"><a class="asset" href="#" rel="' + file.id + '">' + file.name + '</a></li>'
 						} else if(json.files[i].type == 'RazunaAsset') {
 							response += '<li class="file kind_' + file.kind + '">';
-							response += 	'<a class="asset" href="#">' + file.name + '</a>';
+							response += 	'<a class="asset" href="#">' + file.filename + '</a>';
 							response += 	'<div class="asset_info" id="asset_info-' + file.id + '" style="display: none;">';
 							response += 		'<input type="hidden" id="asset-' + file.id + '" value=\'' + json.files[i].obj + '\' />';
 							response += 		'<table class="describe">';
@@ -100,9 +101,9 @@ if(jQuery) (function($){
 							} else {
 								response += 			'<td colspan="2">';
 							}
-							response +=						'<strong>File name:</strong> ' + file.name + '<br />';
-							response += 					'<strong>Kind:</strong> ' + file.kind_description + '<br />';
-							response += 					'<strong>Shared:</strong> ' + file.shared_description + '<br />';
+							response +=						'<strong>File name:</strong> ' + file.filename + '<br />';
+							response += 					'<strong>Kind:</strong> ' + json.files[i]['kind_description'] + '<br />';
+							response += 					'<strong>Shared:</strong> ' + json.files[i]['shared_description'] + '<br />';
 							response += 				'</td>';
 							response += 			'</tr>';
 							if(file.kind == 'img') {
@@ -146,7 +147,7 @@ if(jQuery) (function($){
 							response += 					'<span class="razuna_link_text_empty_error" id="razuna_link_text_empty_error-' + file.id + '">The Link Text is empty.</span>';
 							response += 					'<span class="razuna_setting_to_shared_message" id="razuna_setting_to_shared_message-' + file.id + '">';
 							response += 						'<i><br />This asset needs to be shared, do you want to share this asset? <a href="#insert" onclick="jQuery(this).razunaShare({ id: \'' + file.id + '\', baseUrl: \'' + o.baseUrl + '\'})" class="razuna_share_answer" id="razuna_share_answer-' + file.id + '">Yes</a></i>';
-							response += 						'<span class="razuna_share_loading" id="razuna_share_loading-' + file.id + '"><img src="' + o.baseUrl + 'img/spinner.gif" /></span>';
+							response += 						'<span class="razuna_share_loading" id="razuna_share_loading-' + file.id + '"><img src="' + o.baseUrl + 'pages/img/spinner.gif" /></span>';
 							response += 						'<span class="razuna_share_failed" id="razuna_share_failed-' + file.id + '">Failed</span>';
 							response += 					'</span>';
 							response += 				'</td>';
@@ -236,7 +237,7 @@ if(jQuery) (function($){
 			$("#razuna_share_answer-" + o.id).hide();
 			$("#razuna_share_loading-" + o.id).show();
 
-			script = o.baseUrl + "ajax/razuna-file-share.php";
+			script = o.baseUrl + "pages/ajax/razuna-file-share.php";
 			jQuery.post(script, { assetid: asset.id, assetkind: asset.kind, dir: asset.folder_id }, function(response) {
 				if(response.status == '0') {
 					new_asset = JSON.parse(response.obj);

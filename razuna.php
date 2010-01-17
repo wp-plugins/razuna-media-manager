@@ -25,10 +25,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 */
 
-require_once('razuna-functions.php');
-require_once('RazunaAPI.class.php');
-require_once('razuna-config.php');
-require_once('razuna-media.php');
+require_once('util/razuna-functions.php');
+require_once('api/Razuna.class.php');
+require_once('pages/razuna-config.php');
+require_once('pages/razuna-media.php');
 
 function razuna_init() {
 	add_action('admin_menu', 'razuna_config_page');
