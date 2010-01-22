@@ -33,7 +33,8 @@ if(jQuery) (function($){
 				
 				function showTree(c, t) {
 					$(c).addClass('wait');
-					$.post(o.baseUrl + 'pages/ajax/razuna-file-browser.php', { dir: t }, function(response) {
+					var script = o.baseUrl + 'pages/ajax/razuna-file-browser.php?time=' + new Date().getTime();
+					$.post(script, { dir: t }, function(response) {
 						if(!preProcessAPIRequest(response)) return false;
 						$(c).find('.start').html('');
 						$(".razunaMediaBrowser.start").remove();
@@ -207,7 +208,7 @@ if(jQuery) (function($){
 				div = $('#asset_info-' + o.id);
 				asset = JSON.parse($('#asset-' + o.id).val());
 
-				if(!asset.shared) { jQuery(div).find('#razuna_setting_to_shared_message-' + o.id).attr('style', 'display: inline;'); return false; }
+				if(!asset.shared) { $(div).find('#razuna_setting_to_shared_message-' + o.id).attr('style', 'display: inline;'); return false; }
 
 				content = '';
 				if(asset.kind == 'img') { 
@@ -245,8 +246,8 @@ if(jQuery) (function($){
 			$("#razuna_share_answer-" + o.id).hide();
 			$("#razuna_share_loading-" + o.id).show();
 
-			script = o.baseUrl + "pages/ajax/razuna-file-share.php";
-			jQuery.post(script, { assetid: asset.id, assetkind: asset.kind, dir: asset.folder_id }, function(response) {
+			script = o.baseUrl + "pages/ajax/razuna-file-share.php" + new Date().getTime();
+			$.post(script, { assetid: asset.id, assetkind: asset.kind, dir: asset.folder_id }, function(response) {
 				if(response.status == '0') {
 					new_asset = JSON.parse(response.obj);
 					// check if link needs to be replaced
@@ -269,8 +270,8 @@ if(jQuery) (function($){
 			$('#razuna_upload_link').parent().prepend('<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
 			$('#razuna_upload_link').hide();
 			
-			script = o.baseUrl + "pages/ajax/razuna-prepare-uploader.php";
-			jQuery.get(script, function(response_raw) {
+			script = o.baseUrl + "pages/ajax/razuna-prepare-uploader.php" + new Date().getTime();
+			$.get(script, function(response_raw) {
 				response = JSON.parse(response_raw);
 				
 				$('#razuna_uploader_form').attr('action', response.formaction);
@@ -315,7 +316,7 @@ if(jQuery) (function($){
 						$('#file_browser').append(message_div);
 						
 						$(this).razunaCloseUploadDiv();
-						jQuery('#file_browser').razunaInit({
+						$('#file_browser').razunaInit({
 							baseUrl: o.baseUrl,
 							afterUpload: true,
 						});
