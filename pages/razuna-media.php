@@ -39,16 +39,37 @@ function media_upload_razuna() {
 	return wp_iframe('media_upload_razuna_form', $errors );
 }
 
-function media_upload_razuna_form() {?>
+function media_upload_razuna_form() {
+	$dir = dirname(__FILE__);
+	$pluginRootURL = str_replace('pages', '', get_option('siteurl').substr($dir, strpos($dir, '/wp-content')));
+	?>
 	<div id="razuna_media_wrapper">
 		<form>
+			<div class="razuna_media_navigation">
+				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaOpenUploadDiv({baseUrl: '<?php _e($pluginRootURL); ?>'});">Upload</a>
+			</div>
 			<div id="file_browser"></div>
+			<div class="clearer">&nbsp;</div>
+		</form>
+	</div>
+	<div id="razuna_media_wrapper_upload">
+		<form action="" name="up" method="post" enctype="multipart/form-data" id="razuna_uploader_form">
+			<div class="razuna_media_navigation">
+				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaCloseUploadDiv();">Close</a>
+			</div>
+			<input type="hidden" name="fa" value="c.apiupload" />
+			<input type="hidden" name="sessiontoken" id="razuna_upload_sessiontoken" />
+			<input type="hidden" name="redirectto" id="razuna_upload_redirecturl" />
+			<input type="file" id="filedata" name="filedata" />
+			into folder
+			<select name="destfolderid" id="razuna_upload_folders"></select>
+			<input type="submit" class="button" value="Upload" id="razuna_upload_button">
 		</form>
 	</div>
 	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready( function() {
-		    jQuery('#file_browser').razunaInit({
+			jQuery('#file_browser').razunaInit({
 				baseUrl: '<?php _e(razuna_plugin_url()); ?>'
 			});
 		});
@@ -59,6 +80,7 @@ function media_upload_razuna_form() {?>
 function razuna_media_css() {
 	echo "
 	<style type=\"text/css\">
+		.clearer { clear: both; }
 		ul.razunaMediaBrowser { padding: 0px; margin: 0px; }
 		ul.razunaMediaBrowser li {
 			list-style: none;
@@ -83,7 +105,7 @@ function razuna_media_css() {
 		.razunaMediaBrowser li.directory { background: url(" . razuna_plugin_url() . "pages/img/directory.png) left top no-repeat; }
 		.razunaMediaBrowser li.expanded { background: url(" . razuna_plugin_url() . "pages/img/folder_open.png) left top no-repeat; }
 		.razunaMediaBrowser li.file { background: url(" . razuna_plugin_url() . "pages/img/file.png) left top no-repeat; }
-		.razunaMediaBrowser li.wait { background: url(" . razuna_plugin_url() . "pages/img/spinner.gif) left top no-repeat; }
+		.razunaMediaBrowser li.wait, .razuna_media_navigation .wait { background: url(" . razuna_plugin_url() . "pages/img/spinner.gif) left top no-repeat; }
 		/* File Extensions*/
 		.razunaMediaBrowser li.kind_vid { background: url(" . razuna_plugin_url() . "pages/img/film.png) left top no-repeat; }
 		.razunaMediaBrowser li.kind_img { background: url(" . razuna_plugin_url() . "pages/img/picture.png) left top no-repeat; }
@@ -106,6 +128,20 @@ function razuna_media_css() {
 		.razuna_share_answer {
 			display: inline;
 		}
+		
+		.razuna_media_navigation { text-align: right; float: right; line-height: 16px; }
+		.razuna_media_navigation .wait { padding-left: 16px; height: 16px; text-decoration: none; }
+		#razuna_upload_fields { float: left; }
+		#razuna_media_wrapper_upload {
+			display: none;
+			position: absolute;
+			bottom: 2px;
+			padding-bottom: 5px;
+			width: 100%;
+			background-color: #F5F5F5;
+		}
+		#file_browser { width: 550px; }
+		.error, .updated { margin-left: 0; }
 	</style>";
 }
 

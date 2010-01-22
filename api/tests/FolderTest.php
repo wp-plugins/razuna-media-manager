@@ -33,6 +33,37 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 		$this->assertEquals('Folder 1.1', $folder_1_subfolders[0]->name);
 	}
 	
+	public function testGetFoldersTreeFlat() {
+		$folders = $this->api->getFoldersTreeFlat();
+		$this->assertGreaterThan(0, count($folders));
+		
+		$found_my_folder = false;
+		$found_folder_1 = false;
+		$found_folder_2 = false;
+		$found_folder_1_1 = false;
+		foreach($folders as $folder) {
+			switch($folder->name) {
+			case 'My Folder':
+				$found_my_folder = true;
+				break;
+			case 'Folder 1':
+				$found_folder_1 = true;
+				break;
+			case 'Folder 2':
+				$found_folder_2 = true;
+				break;
+			case 'Folder 1.1':
+				$found_folder_1_1 = true;
+				break;
+			}
+		}
+		
+		$this->assertTrue($found_my_folder);
+		$this->assertTrue($found_folder_1);
+		$this->assertTrue($found_folder_2);
+		$this->assertTrue($found_folder_1_1);
+	}
+	
 	public function testGetAssets() {
 		$home_folder = $this->api->getHomeFolder();
 		

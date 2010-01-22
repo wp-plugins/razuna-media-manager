@@ -243,6 +243,39 @@ class Razuna {
 		return $folders;
 	}
 	
+	public function getFoldersTreeFlat($session_token = null) {
+		if($session_token == null)
+			$session_token = $this->session_token;
+		
+		$folders = $this->getFoldersTree($session_token);
+		$folders_arr = array();
+		if(count($folders) > 0) {
+			foreach($folders as $folder) {
+				$folders_arr[] = $folder;
+				$subfolders = $this->getFoldersTreeFlatSubfolders($folder);
+				foreach($subfolders as $subfolder) {
+					$folders_arr[] = $subfolder;
+				}
+			}
+		}
+		return $folders_arr;
+	}
+	
+	private function getFoldersTreeFlatSubfolders($folder) {
+		$folders_arr = array();
+		
+		if($folder->has_subfolders) {
+			foreach($folder->subfolders as $subfolder) {
+				$folders_arr[] = $subfolder;
+				$sub_subfolders = $this->getFoldersTreeFlatSubfolders($subfolder);
+				foreach($sub_subfolders as $sub_subfolder) {
+					$folders_arr[] = $sub_subfolder;
+				}
+			}
+		}
+		return $folders_arr;
+	}
+	
 	public function getAssets($folderid, $session_token = null, $show_subfolders = 0, $offset = 0, $maxrows = 0, $show = self::ASSET_TYPE_ALL) {
 		$this->initFolder();
 		
@@ -299,12 +332,10 @@ class Razuna {
 	}
 	
 	public function getAsset($asset_id, $folderid, $session_token = null) {
-		$this->initAsset();
-		
 		if($session_token == null)
 			$session_token = $this->session_token;
 		
-		$assets = $this->getAssets($folderid);
+		$assets = $this->getAssets($folderid, $session_token);
 		if(count($assets) > 0) {
 			foreach($assets as $asset) {
 				if($asset->id == $asset_id)
@@ -419,6 +450,7 @@ class RazunaFolder {
 	public $level;
 	public $parent_id;
 	public $subfolders = array();
+	public $level_name;
 	
 	function __construct() {
 		$argv = func_get_args();
@@ -443,6 +475,7 @@ class RazunaFolder {
 		$this->total_document = $total_document;
 		$this->total_audio = $total_audio;
 		$this->owner = $owner;
+		$this->processLevelName();
 	}
 	
 	function __construct2($id, $name, $has_subfolders, $total_assets, $total_image, $total_video, $total_document, $total_audio, $owner, $level, $parent_id) {
@@ -457,10 +490,18 @@ class RazunaFolder {
 		$this->owner = $owner;
 		$this->level = $level;
 		$this->parent_id = $parent_id;
+		$this->processLevelName();
 	}
 	
 	public function addAllSubfolders($subfolders) { $this->subfolders += $subfolders; }
 	public function addSubfolder($folder) { $this->subfolders[] = $folder; }
+	
+	public function processLevelName() {
+		for($i = 0; $i < $this->level; $i++) {
+			$this->level_name .= "-";
+		}
+		$this->level_name .= $this->name;
+	}
 }
 
 class RazunaAsset {

@@ -27,12 +27,13 @@ if(jQuery) (function($){
 			if(o.root == undefined) o.root = '0';
 			if(o.collapseExpandSpeed == undefined) o.collapseExpandSpeed = 500;
 			if(o.baseUrl == undefined) o.baseUrl = './';
+			if(o.afterUpload == undefined) o.afterUpload = false;
 			
 			$(this).each(function() {
 				
 				function showTree(c, t) {
 					$(c).addClass('wait');
-					$.post(o.baseUrl + 'pages/ajax/razuna-file-tree.php', { dir: t }, function(response) {
+					$.post(o.baseUrl + 'pages/ajax/razuna-file-browser.php', { dir: t }, function(response) {
 						if(!preProcessAPIRequest(response)) return false;
 						$(c).find('.start').html('');
 						$(".razunaMediaBrowser.start").remove();
@@ -53,9 +54,12 @@ if(jQuery) (function($){
 								
 								showTree($(this).parent(), escape($(this).attr('rel')));
 								$(this).parent().removeClass('collapsed').addClass('expanded');
+								$(".razunaMediaBrowser a.directory.selected").removeClass('selected');
+								$(this).addClass('selected');
 							} else { // Collapse
 								$(this).parent().find('ul').slideUp({ duration: o.collapseSpeed, easing: o.collapseEasing });
 								$(this).parent().removeClass('expanded').addClass('collapsed');
+								$(".razunaMediaBrowser a.directory.selected").removeClass('selected');
 							}
 						} else {
 							if($(this).parent().find('div.asset_info').hasClass('expanded')) { // Collapse
@@ -87,7 +91,7 @@ if(jQuery) (function($){
 					for(var i = 0; i < json.files.length; i++) {
 						file = JSON.parse(json.files[i].obj);
 						if(json.files[i].type == 'RazunaFolder') {
-							response += '<li class="directory collapsed"><a class="asset" href="#" rel="' + file.id + '">' + file.name + '</a></li>'
+							response += '<li class="directory collapsed"><a class="asset directory" href="#" rel="' + file.id + '">' + file.name + '</a></li>'
 						} else if(json.files[i].type == 'RazunaAsset') {
 							response += '<li class="file kind_' + file.kind + '">';
 							response += 	'<a class="asset" href="#">' + file.filename + '</a>';
@@ -162,7 +166,11 @@ if(jQuery) (function($){
 					return response;
 				}
 				
-				$(this).html('<ul class="razunaMediaBrowser start"><li class="wait">Logging into the Razuna service...<li></ul>');
+				if(o.afterUpload) {
+					$(this).append('<ul class="razunaMediaBrowser start"><li class="wait">Loading...<li></ul>');
+				} else {
+					$(this).html('<ul class="razunaMediaBrowser start"><li class="wait">Logging into the Razuna service...<li></ul>');
+				}
 				showTree($(this), escape(o.root));
 				
 			});
@@ -255,6 +263,76 @@ if(jQuery) (function($){
 					$(div).find('.razuna_share_failed').show();
 				}
 			}, "json");
+		},
+		
+		razunaOpenUploadDiv: function(o) {
+			$('#razuna_upload_link').parent().prepend('<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
+			$('#razuna_upload_link').hide();
+			
+			script = o.baseUrl + "pages/ajax/razuna-prepare-uploader.php";
+			jQuery.get(script, function(response_raw) {
+				response = JSON.parse(response_raw);
+				
+				$('#razuna_uploader_form').attr('action', response.formaction);
+				$('#razuna_upload_sessiontoken').val(response.sessiontoken);
+				$('#razuna_upload_redirecturl').val(o.baseUrl + "pages/ajax/razuna-upload-callback.php");
+				
+				var options = "";
+				for(var i = 0; i < response.folders.length; i++) {
+					folder = JSON.parse(response.folders[i]);
+					var name = "";
+					for(var j = 0; j < folder.level; j++) {
+						name += "-";
+					}
+					name += folder.name;
+					
+					options += '<option value="' + folder.id + '">' + name + '</option>'
+				}
+				$('#razuna_upload_folders').append(options);
+				
+				$('#razuna_uploader_form').attr('target', 'razuna_uploader_response');
+				$('#razuna_media_wrapper_upload').append('<iframe id="razuna_uploader_response" name="razuna_uploader_response" style="display: none;"></iframe>');
+				
+				$('#razuna_upload_button').click(function() {
+					$('#razuna_upload_button').fadeOut(500);
+					$('#razuna_media_wrapper_upload .razuna_media_navigation a').hide();
+					$('#razuna_media_wrapper_upload .razuna_media_navigation').append('<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
+				});
+				
+				$('#razuna_uploader_response').load(function () {
+					if($('#razuna_uploader_response').contents().find('responsecode').text() != '') {
+						var responsecode = $('#razuna_uploader_response').contents().find('responsecode').text();
+						var message = $('#razuna_uploader_response').contents().find('message').text();
+						
+						var message_div = "";
+						if(responsecode == '0') {
+							message_div += '<div id="message" class="updated fade"><p><strong>File uploaded</strong>';
+						} else if(responsecode == '1') {
+							message_div += '<div id="message" class="error"><p><strong>Could not upload the file</strong>';
+						}
+						message_div += '<a href="#" class="razuna_media_navigation" onclick="jQuery(this).parent().parent().remove();">X</a></p></div>';
+						$('.razunaMediaBrowser').remove();
+						$('#file_browser').append(message_div);
+						
+						$(this).razunaCloseUploadDiv();
+						jQuery('#file_browser').razunaInit({
+							baseUrl: o.baseUrl,
+							afterUpload: true,
+						});
+					}
+				});
+				
+				$('#razuna_media_upload_wait').remove();
+				$('#razuna_media_wrapper_upload').fadeIn(500);
+			});
+		},
+		
+		razunaCloseUploadDiv: function() {
+			$('#razuna_media_wrapper_upload').fadeOut(500);
+			$('#razuna_upload_link').fadeIn(500, function() {
+				$('#razuna_media_wrapper_upload .razuna_media_navigation a').show();
+				$('#razuna_media_wrapper_upload .razuna_media_navigation .wait').remove();
+			});
 		}
 		
 	});
