@@ -47,6 +47,7 @@ function media_upload_razuna_form() {
 		<form>
 			<div class="razuna_media_navigation">
 				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaOpenUploadDiv({baseUrl: '<?php _e($pluginRootURL); ?>'});">Upload</a>
+				<a href="#" onclick="init();">Refresh</a>
 			</div>
 			<div id="file_browser"></div>
 			<div class="clearer">&nbsp;</div>
@@ -69,10 +70,14 @@ function media_upload_razuna_form() {
 	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
 	<script type="text/javascript">
 		jQuery(document).ready( function() {
+			init();
+		});
+		
+		function init() {
 			jQuery('#file_browser').razunaInit({
 				baseUrl: '<?php _e(razuna_plugin_url()); ?>'
 			});
-		});
+		}
 	</script>
 	<?php
 }
@@ -140,7 +145,7 @@ function razuna_media_css() {
 			width: 100%;
 			background-color: #F5F5F5;
 		}
-		#file_browser { width: 550px; }
+		#file_browser { width: 515px; }
 		.error, .updated { margin-left: 0; }
 	</style>";
 }

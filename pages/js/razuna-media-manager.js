@@ -307,7 +307,7 @@ if(jQuery) (function($){
 						
 						var message_div = "";
 						if(responsecode == '0') {
-							message_div += '<div id="message" class="updated fade"><p><strong>File uploaded</strong>';
+							message_div += '<div id="message" class="updated fade"><p><strong>File uploaded. If it doesn\'t show up, try hitting Refresh.</strong>';
 						} else if(responsecode == '1') {
 							message_div += '<div id="message" class="error"><p><strong>Could not upload the file</strong>';
 						}
