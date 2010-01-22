@@ -330,6 +330,7 @@ if(jQuery) (function($){
 		razunaCloseUploadDiv: function() {
 			$('#razuna_media_wrapper_upload').fadeOut(500);
 			$('#razuna_upload_link').fadeIn(500, function() {
+				$('#razuna_upload_button').show();
 				$('#razuna_media_wrapper_upload .razuna_media_navigation a').show();
 				$('#razuna_media_wrapper_upload .razuna_media_navigation .wait').remove();
 			});
