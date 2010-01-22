@@ -246,7 +246,7 @@ if(jQuery) (function($){
 			$("#razuna_share_answer-" + o.id).hide();
 			$("#razuna_share_loading-" + o.id).show();
 
-			script = o.baseUrl + "pages/ajax/razuna-file-share.php" + new Date().getTime();
+			script = o.baseUrl + "pages/ajax/razuna-file-share.php?time=" + new Date().getTime();
 			$.post(script, { assetid: asset.id, assetkind: asset.kind, dir: asset.folder_id }, function(response) {
 				if(response.status == '0') {
 					new_asset = JSON.parse(response.obj);
@@ -270,7 +270,7 @@ if(jQuery) (function($){
 			$('#razuna_upload_link').parent().prepend('<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
 			$('#razuna_upload_link').hide();
 			
-			script = o.baseUrl + "pages/ajax/razuna-prepare-uploader.php" + new Date().getTime();
+			script = o.baseUrl + "pages/ajax/razuna-prepare-uploader.php?time=" + new Date().getTime();
 			$.get(script, function(response_raw) {
 				response = JSON.parse(response_raw);
 				
