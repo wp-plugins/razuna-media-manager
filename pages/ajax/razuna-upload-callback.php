@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 header('Content-type: text/xml');
 ?>
-<?xml version="1.0" encoding="UTF-8" ?>
+<?php echo '<?xml version="1.0" encoding="UTF-8" ?>'; ?>
 <response>
 	<responsecode><?php echo $_GET['responsecode'] ?></responsecode>
 	<message><?php echo $_GET['message'] ?></message>
