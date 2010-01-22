@@ -34,13 +34,13 @@ Date US Format	User					Note
 
 class Razuna {
 	
-	const AUTH_URI							= 'http://api.razuna.com/global/api/authentication.cfc?wsdl';
-	const FOLDER_URI						= 'http://api.razuna.com/global/api/folder.cfc?wsdl';
-	const COLLECTION_URI				= 'http://api.razuna.com/global/api/collection.cfc?wsdl';
-	const HOSTS_URI							= 'http://api.razuna.com/global/api/hosts.cfc?wsdl';
-	const SEARCH_URI						= 'http://api.razuna.com/global/api/search.cfc?wsdl';
-	const USER_URI							= 'http://api.razuna.com/global/api/user.cfc?wsdl';
-	const ASSET_URI							= 'http://api.razuna.com/global/api/asset.cfc?wsdl';
+	const AUTH_URI							= '/global/api/authentication.cfc?wsdl';
+	const FOLDER_URI						= '/global/api/folder.cfc?wsdl';
+	const COLLECTION_URI				= '/global/api/collection.cfc?wsdl';
+	const HOSTS_URI							= '/global/api/hosts.cfc?wsdl';
+	const SEARCH_URI						= '/global/api/search.cfc?wsdl';
+	const USER_URI							= '/global/api/user.cfc?wsdl';
+	const ASSET_URI							= '/global/api/asset.cfc?wsdl';
 	
 	const HOST_TYPE_ID					= 1;
 	const HOST_TYPE_NAME				= 2;
@@ -352,7 +352,11 @@ class Razuna {
 	
 	private function buildSoapClient($uri) {
 		try {
-			return new SoapClient($uri);
+			$host = '';
+			if(strpos($this->config_host, "http://") == false || strpos($this->config_host, "https://") == false)
+				$host .= 'http://';
+			$host .= $this->config_host;
+			return new SoapClient($host . $uri);
 		} catch(Exception $e) {
 			throw new RazunaNotAvailableException($e->getMessage());
 		}
