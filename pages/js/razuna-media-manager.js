@@ -138,16 +138,26 @@ if(jQuery) (function($){
 								response += 				'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + file.thumbnail + '\');">File Thumbnail Size</button>'
 								response += 			'</td>';
 								response += 		'</tr>';
-							} else {
+							} else if(file.kind == 'vid' || file.kind == 'aud') {
 								response += 		'<tr>';
-								response += 			'<td><strong>Link Text</strong></td>';
+								response += 			'<td><strong>Width:</strong></td>';
+								response += 			'<td><input type="text" class="player-width" value="450" /></td>';
+								response += 		'</tr>';
+							} else if(file.kind == 'vid') {
+								response += 		'<tr>';
+								response += 			'<td><strong>Height:</strong></td>';
+								response += 			'<td><input type="text" class="player-height" value="300" /></td>';
+								response += 		'</tr>';
+							} else if(file.kind == 'doc') {
+								response += 		'<tr>';
+								response += 			'<td><strong>Link Text:</strong></td>';
 								response += 			'<td><input type="text" class="link-text" onkeyup="if(this.value != \'\') { jQuery(this).parents().find(\'.asset_info\').find(\'.razuna_link_text_empty_error\').removeAttr(\'style\'); }"/></td>';
 								response += 		'</tr>';
 							}
 							response += 			'<tr>';
 							response += 				'<td>&nbsp;</td>';
 							response += 				'<td>';
-							response += 					'<button class="button insert_into_post" type="button" onclick="jQuery(this).razunaInsert({ id: \'' + file.id + '\'});">Insert into Post</button>';
+							response += 					'<button class="button insert_into_post" type="button" onclick="jQuery(this).razunaInsert({ baseUrl: \'' + o.baseUrl + '\', id: \'' + file.id + '\'});">Insert into Post</button>';
 							response += 					'<span class="razuna_link_text_empty_error" id="razuna_link_text_empty_error-' + file.id + '">The Link Text is empty.</span>';
 							response += 					'<span class="razuna_setting_to_shared_message" id="razuna_setting_to_shared_message-' + file.id + '">';
 							response += 						'<i><br />This asset needs to be shared, do you want to share this asset? <a href="#insert" onclick="jQuery(this).razunaShare({ id: \'' + file.id + '\', baseUrl: \'' + o.baseUrl + '\'})" class="razuna_share_answer" id="razuna_share_answer-' + file.id + '">Yes</a></i>';
@@ -191,16 +201,30 @@ if(jQuery) (function($){
 				}
 				
 				function getLinkTag(asset, div, content) {
-					html = "<a href=\"";
-					if(asset.kind == 'img') {
-						if($(div).find('.urlfield').val() == '') {
-							return content;
-						}
-						html += $(div).find('.urlfield').val();
+					if(asset.kind == 'vid' || asset.kind == 'aud') {
+						if($(div).find('.player-width').val() == '')
+							width = '450';
+						else
+							width = $(div).find('.player-width').val();
+						if(asset.kind == 'aud')
+							height = '30';
+						else if($(div).find('.player-height').val() == '')
+							height = '300';
+						else
+							height = $(div).find('.player-height').val();
+						html = "[RAZUNA_PLAYER=" + asset.url + "," + asset.id + "," + asset.kind + "," + width + "," + height + "]";
 					} else {
-						html += $(asset).url;
+						var html = "<a href=\"";
+						if(asset.kind == 'img') {
+							if($(div).find('.urlfield').val() == '') {
+								return content;
+							}
+							html += $(div).find('.urlfield').val();
+						} else {
+							html += asset.url;
+						}
+						html += "\">" + content + "</a>";
 					}
-					html += "\">" + content + "</a>";
 					return html;
 				}
 				

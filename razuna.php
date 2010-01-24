@@ -32,6 +32,7 @@ require_once('pages/razuna-media.php');
 
 add_action('init', 'razuna_admin_init');
 add_action('wp_head', 'razuna_frontend_head');
+add_filter('the_content','razuna_player_content');
 
 function razuna_admin_init() {
 	add_action('admin_menu', 'razuna_admin_config_page');
@@ -59,7 +60,32 @@ function razuna_admin_start_session() {
 
 function razuna_frontend_head() {
 	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/flowplayer-3.1.4.min.js\"></script>\n";
-	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/razuna-frontend.js\"></script>\n";
+}
+
+function razuna_player_content($content) {
+	$regex = '/\[RAZUNA_PLAYER=([a-z0-9\:\.\-\&\_\/\|]+)\,([0-9]+)\,([a-z]+)\,([0-9]+)\,([0-9]+)\]/i';
+	$matches = array();
+
+	preg_match_all($regex, $content, $matches);
+	
+	if($matches[0][0] != '') {
+		foreach($matches[0] as $key => $data) {
+			$url = $matches[1][$key];
+			$id = $matches[2][$key];
+			$type = $matches[3][$key];
+			$width = $matches[4][$key];
+			$height = $matches[5][$key];
+			
+			$replace = "<a href=\"$url\" style=\"display:block;width:".$width."px;height:".$height."px;\" id=\"razuna_asset_".$id."\"></a>";
+			if($type == 'vid')
+				$replace .= "<script type=\"text/javascript\">flowplayer(\"razuna_asset_".$id."\", \"". razuna_plugin_url() ."pages/swf/flowplayer-3.1.5.swf\",{ clip: { autoPlay: false } });</script>";
+			else
+				$replace .= "<script type=\"text/javascript\">flowplayer(\"razuna_asset_".$id."\", \"". razuna_plugin_url() ."pages/swf/flowplayer-3.1.5.swf\",{ plugins: { controls: { fullscreen: false, height: 30 } }, clip: { autoPlay: false } });</script>";
+				
+			$content = str_replace($matches[0][$key], $replace, $content);
+		}	
+	}
+	return $content;
 }
 
 function razuna_plugin_url() {
