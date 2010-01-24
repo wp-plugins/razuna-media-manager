@@ -127,7 +127,12 @@ if(jQuery) (function($){
 								response += 		'</tr>';
 								response += 		'<tr>';
 								response += 			'<td><strong>Alternate text:</strong></td>';
-								response += 			'<td><input type="text" class="alt" /></td>';
+								response += 			'<td><input type="text" class="alt" value="' + file.filename + '" /></td>';
+								response += 		'</tr>';
+								response += 		'<tr>';
+								response += 		'<tr>';
+								response += 			'<td><strong>Title:</strong></td>';
+								response += 			'<td><input type="text" class="title" value="' + file.description + '" /></td>';
 								response += 		'</tr>';
 								response += 		'<tr>';
 								response += 			'<td><strong>Link URL:</strong></td>';
@@ -151,7 +156,7 @@ if(jQuery) (function($){
 							} else if(file.kind == 'doc') {
 								response += 		'<tr>';
 								response += 			'<td><strong>Link Text:</strong></td>';
-								response += 			'<td><input type="text" class="link-text" onkeyup="if(this.value != \'\') { jQuery(this).parents().find(\'.asset_info\').find(\'.razuna_link_text_empty_error\').removeAttr(\'style\'); }"/></td>';
+								response += 			'<td><input type="text" class="link-text" value="' + file.description + '" onkeyup="if(this.value != \'\') { jQuery(this).parents().find(\'.asset_info\').find(\'.razuna_link_text_empty_error\').removeAttr(\'style\'); }"/></td>';
 								response += 		'</tr>';
 							}
 							response += 			'<tr>';
@@ -196,7 +201,7 @@ if(jQuery) (function($){
 					} else {
 						html += asset.thumbnail;
 					}
-					html += "\"" + " alt=\"" + $(div).find('.alt').val() + "\" />";
+					html += "\"" + " alt=\"" + $(div).find('.alt').val() + "\" title=\"" + $(div).find('.title').val() + "\" />";
 					return html;
 				}
 				
