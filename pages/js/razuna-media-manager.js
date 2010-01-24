@@ -32,7 +32,6 @@ if(jQuery) (function($){
 			$(this).each(function() {
 				
 				function showTree(c, t) {
-					$(c).addClass('wait');
 					var script = o.baseUrl + 'pages/ajax/razuna-file-browser.php?time=' + new Date().getTime();
 					$.post(script, { dir: t }, function(response) {
 						if(!preProcessAPIRequest(response)) return false;
