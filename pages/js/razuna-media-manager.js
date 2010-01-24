@@ -118,11 +118,11 @@ if(jQuery) (function($){
 								response += 			'<td>';
 								response += 				'<div class="image-size-item">';
 								response += 					'<input id="image-size" type="radio" value="thumbnail" class="image-size-thumbnail" name="image-size-' + file.id + '" checked="checked" />';
-								response += 					'<label for="image-size">Thumbnail</label>';
+								response += 					'<label for="image-size"> Thumbnail</label>';
 								response += 				'</div>';
 								response += 				'<div class="image-size-item">';
 								response += 					'<input id="image-size" type="radio" value="original" class="image-size-original" name="image-size-' + file.id + '" />';
-								response += 					'<label for="image-size">Original</label>';
+								response += 					'<label for="image-size"> Original</label>';
 								response += 				'</div>';
 								response += 			'</td>';
 								response += 		'</tr>';
