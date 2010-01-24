@@ -30,29 +30,36 @@ require_once('api/Razuna.class.php');
 require_once('pages/razuna-config.php');
 require_once('pages/razuna-media.php');
 
-function razuna_init() {
-	add_action('admin_menu', 'razuna_config_page');
-	add_action('admin_init', 'razuna_start_session');
-	add_action('admin_init', 'razuna_register_settings');
-}
-add_action('init', 'razuna_init');
+add_action('init', 'razuna_admin_init');
+add_action('wp_head', 'razuna_frontend_head');
 
-function razuna_config_page() {
+function razuna_admin_init() {
+	add_action('admin_menu', 'razuna_admin_config_page');
+	add_action('admin_init', 'razuna_admin_start_session');
+	add_action('admin_init', 'razuna_admin_register_settings');
+}
+
+function razuna_admin_config_page() {
 	if(function_exists('add_submenu_page')) {
 		add_submenu_page('options-general.php', __('Razuna'), __('Razuna'), 'manage_options', 'razuna-config', 'razuna_config');
 	}
 }
 
-function razuna_register_settings() {
+function razuna_admin_register_settings() {
 	register_setting('razuna','razuna_hostname');
 	register_setting('razuna', 'razuna_username');
 	register_setting('razuna', 'razuna_password');
 }
 
-function razuna_start_session() {
+function razuna_admin_start_session() {
 	if (!session_id()) {
 		session_start();
 	}
+}
+
+function razuna_frontend_head() {
+	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/flowplayer-3.1.4.min.js\"></script>\n";
+	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/razuna-frontend.js\"></script>\n";
 }
 
 function razuna_plugin_url() {
