@@ -52,8 +52,15 @@ function razuna_config() {
 			
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />
+				<input type="button" name="test" class="button" id="razuna-test-configuration-btn" value="<?php esc_attr_e('Test Configuration') ?>" />
 			</p>
 		</form>
+		<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
+		<script type="text/javascript">
+			jQuery(document).ready( function() {
+				jQuery('#razuna-test-configuration-btn').razunaTestConfiguration({ baseUrl: '<?php _e(razuna_plugin_url()); ?>' });
+			});
+		</script>
 	</div>
 	<?php
 }
@@ -61,6 +68,9 @@ function razuna_config() {
 function razuna_config_css() {
 	echo "<style type='text/css'>";
 	echo "#icon-razuna { background: transparent url(" . razuna_plugin_url() . "img/razuna-logo-32.png) no-repeat; }";
+	echo ".wait { background: url(" . razuna_plugin_url() . "pages/img/spinner.gif) left top no-repeat; padding-left: 16px; height: 16px; text-decoration: none; }";
+	echo "#razuna_message, #razuna_message p { display: inline; padding: 2px; }";
+	echo "#razuna_message.success { background-color: lightgreen; -moz-border-radius: 3px; border: 1px solid green; }";
 	echo "</style>";
 }
 add_action('admin_head', 'razuna_config_css');

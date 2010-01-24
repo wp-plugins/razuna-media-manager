@@ -335,6 +335,30 @@ if(jQuery) (function($){
 				$('#razuna_media_wrapper_upload .razuna_media_navigation a').show();
 				$('#razuna_media_wrapper_upload .razuna_media_navigation .wait').remove();
 			});
+		},
+		
+		razunaTestConfiguration: function(o) {
+			$(this).click(function() {
+				btn = this;
+				$("#razuna_message").remove();
+				$(this).after('&nbsp;<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
+				
+				script = o.baseUrl + "pages/ajax/razuna-test-config.php?time=" + new Date().getTime();
+				hostname = $("#razuna_hostname").val();
+				username = $("#razuna_username").val();
+				password = $("#razuna_password").val();
+				$.post(script, { hostname: hostname, username: username, password: password }, function(response_raw) {
+					response = JSON.parse(response_raw);
+					
+					if(response.status == 0) {
+						$(btn).after('&nbsp;<div id="razuna_message" class="success"><p><strong>All right sparky! Now hit the save button.</strong></p></div>');
+					} else {
+						$(btn).after('&nbsp;<div id="razuna_message" class="error"><p><strong>Check the credentials</strong></p></div>');
+					}
+					
+					$('span#razuna_media_upload_wait').remove();
+				});
+			});
 		}
 		
 	});
