@@ -119,6 +119,7 @@ function razuna_media_css() {
 		.razunaMediaBrowser li.kind_vid { background: url(" . razuna_plugin_url() . "pages/img/film.png) left top no-repeat; }
 		.razunaMediaBrowser li.kind_img { background: url(" . razuna_plugin_url() . "pages/img/picture.png) left top no-repeat; }
 		.razunaMediaBrowser li.kind_doc { background: url(" . razuna_plugin_url() . "pages/img/doc.png) left top no-repeat; }
+		.razunaMediaBrowser li.kind_aud { background: url(" . razuna_plugin_url() . "pages/img/aud.png) left top no-repeat; }
 		
 		#razuna_media_wrapper {
 			width: 640px;
