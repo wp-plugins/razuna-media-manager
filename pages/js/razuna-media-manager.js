@@ -114,7 +114,6 @@ if(jQuery) (function($){
 							response += 				'</td>';
 							response += 			'</tr>';
 							if(file.kind == 'img') {
-								
 								response += 		'<tr>';
 								response += 			'<td><strong>Size:</strong></td>';
 								response += 			'<td>';
@@ -151,11 +150,12 @@ if(jQuery) (function($){
 								response += 			'<td><strong>Width:</strong></td>';
 								response += 			'<td><input type="text" class="player-width" value="450" /></td>';
 								response += 		'</tr>';
-							} else if(file.kind == 'vid') {
-								response += 		'<tr>';
-								response += 			'<td><strong>Height:</strong></td>';
-								response += 			'<td><input type="text" class="player-height" value="300" /></td>';
-								response += 		'</tr>';
+								if(file.kind == 'vid') {
+									response += 	'<tr>';
+									response += 		'<td><strong>Height:</strong></td>';
+									response += 		'<td><input type="text" class="player-height" value="300" /></td>';
+									response += 	'</tr>';
+								}
 							} else if(file.kind == 'doc') {
 								response += 		'<tr>';
 								response += 			'<td><strong>Link Text:</strong></td>';
