@@ -35,7 +35,7 @@ try {
 	
 	if($_POST['dir'] == 0) {
 		// get users home folder
-		$home_folder = $razuna_api->getHomeFolder();
+		$home_folder = $razuna_api->getRootFolders();
 		if($home_folder == null) {
 			throw new RazunaException("Could not find the user's home folder");
 		} else {

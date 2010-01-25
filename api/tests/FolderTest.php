@@ -6,7 +6,7 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 	protected $session_token;
 	
 	protected function setUp() {
-		$this->api = new Razuna(self::CONFIG_HOST_NAME, self::CONFIG_USERNAME, self::CONFIG_PASSWORD_CLEAR, false);
+		$this->api = new Razuna(self::CONFIG_HOST_NAME, self::CONFIG_USERNAME, self::CONFIG_PASSWORD_CLEAR, false, Razuna::HOST_TYPE_NAME);
 		$session_token = $this->api->login();
 	}
 	
@@ -15,10 +15,10 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 		$this->assertGreaterThan(0, count($folders));
 	}
 	
-	public function testGetHomeFolder() {
-		$folder = $this->api->getHomeFolder();
-		$this->assertNotNull($folder);
-		$this->assertEquals('My Folder', $folder->name);
+	public function testGetRootFolders() {
+		$folders = $this->api->getRootFolders();
+		$this->assertNotNull($folders);
+		$this->assertGreaterThan(0, count($folders));
 	}
 	
 	public function testGetFoldersTree() {
@@ -65,7 +65,11 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 	}
 	
 	public function testGetAssets() {
-		$home_folder = $this->api->getHomeFolder();
+		$folders = $this->api->getRootFolders();
+		foreach($folders as $folder) {
+			if($folder->name == 'My Folder')
+				$home_folder = $folder;
+		}
 		
 		$assets = $this->api->getAssets($home_folder->id);
 		$found = false;
@@ -85,7 +89,11 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 	}
 	
 	public function testSetAssetShared() {
-		$home_folder = $this->api->getHomeFolder();
+		$folders = $this->api->getRootFolders();
+		foreach($folders as $folder) {
+			if($folder->name == 'My Folder')
+				$home_folder = $folder;
+		}
 		
 		$assets = $this->api->getAssets($home_folder->id);
 		if(count($assets) > 0) {
@@ -117,7 +125,12 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 	}
 	
 	public function testGetAsset() {
-		$home_folder = $this->api->getHomeFolder();
+		$folders = $this->api->getRootFolders();
+		foreach($folders as $folder) {
+			if($folder->name == 'My Folder')
+				$home_folder = $folder;
+		}
+		
 		$assets = $this->api->getAssets($home_folder->id);
 		if(count($assets) > 0) {
 			$asset_one = $assets[0];

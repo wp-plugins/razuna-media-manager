@@ -61,13 +61,36 @@ class Razuna {
 	private $soap_asset;
 	
 	private $config_host;
+	private $config_hostid;
 	private $config_username;
 	private $config_password;
 	private $config_passhashed;
 	private $config_host_type;
 	private $session_token;
 	
-	function __construct($host, $username, $password, $passhashed, $host_type = self::HOST_TYPE_NAME) {
+	function __construct() {
+		$argv = func_get_args();
+		switch(func_num_args()) {
+		default:
+		case 5:
+			self::__construct1($argv[0], $argv[1], $argv[2], $argv[3], $argv[4]);
+			break;
+		case 6:
+			self::__construct2($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5]);
+			break;
+		}
+	}
+	
+	function __construct1($host, $username, $password, $passhashed, $host_type = self::HOST_TYPE_NAME) {
+		$this->config_host = $host;
+		$this->config_username = $username;
+		$this->config_password = $password;
+		$this->config_passhashed = ($passhashed == true) ? 1 : 0;
+		$this->config_host_type = $host_type;
+	}
+	
+	function __construct2($hostid, $host, $username, $password, $passhashed, $host_type = self::HOST_TYPE_NAME) {
+		$this->config_hostid = $hostid;
 		$this->config_host = $host;
 		$this->config_username = $username;
 		$this->config_password = $password;
@@ -88,7 +111,7 @@ class Razuna {
     $this->initAuthentication();
 
 		if($this->config_host_type == self::HOST_TYPE_ID) {
-			$response = $this->soap_authentication->login($this->config_host, $this->config_username, $this->config_password, $this->config_passhashed);
+			$response = $this->soap_authentication->login($this->config_hostid, $this->config_username, $this->config_password, $this->config_passhashed);
 		} else {
 			$response = $this->soap_authentication->loginhost($this->config_host, $this->config_username, $this->config_password, $this->config_passhashed);
 		}
@@ -180,7 +203,7 @@ class Razuna {
 		return $folders;
 	}
 	
-	public function getHomeFolder($userid = null, $session_token = null) {
+	public function getRootFolders($userid = null, $session_token = null) {
 		$this->initFolder();
 		
 		if($session_token == null)
@@ -191,12 +214,13 @@ class Razuna {
 		
 		$folders = $this->getFolders(0, $session_token);
 		
+		$folders_owner = array();
 		foreach($folders as $folder) {
 			if($folder->owner == $userid) {
-				return $folder;
+				$folders_owner[] = $folder;
 			}
 		}
-		return null;
+		return $folders_owner;
 	}
 	
 	public function getFoldersTree($session_token = null) {

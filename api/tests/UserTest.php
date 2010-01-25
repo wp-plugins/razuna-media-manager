@@ -6,7 +6,7 @@ class UserTest extends PHPUnit_Framework_TestCase implements Base {
 	protected $session_token;
 	
 	protected function setUp() {
-		$this->api = new Razuna(self::CONFIG_HOST_NAME, self::CONFIG_USERNAME, self::CONFIG_PASSWORD_CLEAR, false);
+		$this->api = new Razuna(self::CONFIG_HOST_NAME, self::CONFIG_USERNAME, self::CONFIG_PASSWORD_CLEAR, false, Razuna::HOST_TYPE_NAME);
 		$session_token = $this->api->login();
 	}
 	
