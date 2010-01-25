@@ -52,6 +52,8 @@ function razuna_admin_config_page() {
 
 function razuna_admin_register_settings() {
 	register_setting('razuna','razuna_hostname');
+	register_setting('razuna','razuna_hostid');
+	register_setting('razuna','razuna_dampath');
 	register_setting('razuna', 'razuna_username');
 	register_setting('razuna', 'razuna_password');
 }
@@ -99,6 +101,15 @@ function razuna_admin_thickbox() {
 
 function razuna_plugin_url() {
 	return get_option('siteurl') . "/wp-content/plugins/razuna-media-manager/";
+}
+
+function razuna_get_hosting_type() {
+	$haystack = get_option('razuna_hostname');
+	$needle = '.razuna.com';
+	if(strrpos($haystack, $needle) === strlen($haystack)-strlen($needle))
+		return 'hosted';
+	else
+		return 'self';
 }
 
 ?>

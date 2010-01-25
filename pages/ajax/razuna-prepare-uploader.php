@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 require_once('../../../../../wp-load.php');
 require_once('../../razuna.php');
-$razuna_api = new Razuna(get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false, Razuna::HOST_TYPE_NAME);
+$razuna_api = new Razuna(get_option('razuna_hostid'), get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false, Razuna::HOST_TYPE_ID);
 
 $response = array('status' => '0');
 
@@ -32,7 +32,7 @@ try {
 	}
 	
 	$response['sessiontoken'] = $_SESSION['razuna-sessiontoken'];
-	$response['formaction'] = 'http://'. get_option('razuna_hostname') .'/index.cfm';
+	$response['formaction'] = 'http://'. get_option('razuna_hostname') . get_option('razuna_dampath') .'/index.cfm';
 	$response['folders'] = array();
 	
 	

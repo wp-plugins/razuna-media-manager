@@ -23,7 +23,7 @@ $_POST['assetkind'] = urldecode($_POST['assetkind']);
 
 require_once('../../../../../wp-load.php');
 require_once('../../razuna.php');
-$razuna_api = new Razuna(get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false, Razuna::HOST_TYPE_NAME);
+$razuna_api = new Razuna(get_option('razuna_hostid'), get_option('razuna_hostname'), get_option('razuna_username'), get_option('razuna_password'), false, Razuna::HOST_TYPE_ID);
 
 $response = array('status' => '0');
 

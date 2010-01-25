@@ -38,6 +38,14 @@ function razuna_config() {
 					<td><input name="razuna_hostname" type="text" id="razuna_hostname" value="<?php echo get_option('razuna_hostname'); ?>" class="regular-text code" /> <span class="description"><?php _e('Example: yourcompany.razuna.com'); ?></span></td>
 				</tr>
 				<tr valign="top">
+					<th scope="row"><label for="razuna_hostid"><?php _e('Host ID'); ?></label></th>
+					<td><input name="razuna_hostid" type="text" id="razuna_hostid" value="<?php echo get_option('razuna_hostid'); ?>" class="regular-text code" /> <span class="description"><?php _e('Example: 496'); ?></span></td>
+				</tr>
+				<tr valign="top">
+					<th scope="row"><label for="razuna_hostid"><?php _e('DAM Path'); ?></label></th>
+					<td><input name="razuna_dampath" type="text" id="razuna_dampath" value="<?php echo get_option('razuna_dampath'); ?>" class="regular-text code" /> <span class="description"><?php _e('Example: /demo/dam'); ?></span></td>
+				</tr>
+				<tr valign="top">
 					<th scope="row"><label for="razuna_username"><?php _e('Username'); ?></label></th>
 					<td><input name="razuna_username" type="text" id="razuna_username" value="<?php echo get_option('razuna_username'); ?>" class="regular-text code" /></td>
 				</tr>
@@ -48,7 +56,7 @@ function razuna_config() {
 			</table>
 			
 			<input type="hidden" name="action" value="update" />
-			<input type="hidden" name="page_options" value="razuna_hostname,razuna_username,razuna_password" />
+			<input type="hidden" name="page_options" value="razuna_hostname,razuna_hostid,razuna_username,razuna_password" />
 			
 			<p class="submit">
 				<input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e('Save Changes') ?>" />

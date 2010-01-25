@@ -100,17 +100,26 @@ if(jQuery) (function($){
 							response += 	'<a class="asset" href="#">' + file.filename + '</a>';
 							response += 	'<div class="asset_info" id="asset_info-' + file.id + '" style="display: none;">';
 							response += 		'<input type="hidden" id="asset-' + file.id + '" value=\'' + json.files[i].obj + '\' />';
+							response +=			'<input type="hidden" id="asset-' + file.id + '-hostingtype" value="' + json.hostingtype + '" />';
 							response += 		'<table class="describe">';
 							response += 			'<tr>';
 							if(file.kind == 'img') {
-								response += 			'<td><img src="' + file.thumbnail + '" /></td>';
+								response += 			'<td>';
+								if(json.hostingtype == 'hosted' && !file.shared ) {
+									response += 			'<small>Thumbnail being showed<br />when shared</small>'
+								} else {
+									response += 			'<img src="' + file.thumbnail + '" /></td>';
+								}
+								response += 			'</td>';
 								response +=				'<td>';
 							} else {
 								response += 			'<td colspan="2">';
 							}
 							response +=						'<strong>File name:</strong> ' + file.filename + '<br />';
 							response += 					'<strong>Kind:</strong> ' + json.files[i]['kind_description'] + '<br />';
-							response += 					'<strong>Shared:</strong> ' + json.files[i]['shared_description'] + '<br />';
+							if(json.hostingtype == 'hosted') {
+								response += 				'<strong>Shared:</strong> ' + json.files[i]['shared_description'] + '<br />';
+							}
 							response += 				'</td>';
 							response += 			'</tr>';
 							if(file.kind == 'img') {
@@ -240,7 +249,7 @@ if(jQuery) (function($){
 				div = $('#asset_info-' + o.id);
 				asset = JSON.parse($('#asset-' + o.id).val());
 
-				if(!asset.shared) { $(div).find('#razuna_setting_to_shared_message-' + o.id).attr('style', 'display: inline;'); return false; }
+				if(!asset.shared && $('#asset-' + o.id + '-hostingtype').val() == 'hosted') { $(div).find('#razuna_setting_to_shared_message-' + o.id).attr('style', 'display: inline;'); return false; }
 
 				content = '';
 				if(asset.kind == 'img') { 
@@ -382,10 +391,11 @@ if(jQuery) (function($){
 				$(this).after('&nbsp;<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
 				
 				script = o.baseUrl + "pages/ajax/razuna-test-config.php?time=" + new Date().getTime();
+				hostid = $("#razuna_hostid").val();
 				hostname = $("#razuna_hostname").val();
 				username = $("#razuna_username").val();
 				password = $("#razuna_password").val();
-				$.post(script, { hostname: hostname, username: username, password: password }, function(response_raw) {
+				$.post(script, { hostid: hostid, hostname: hostname, username: username, password: password }, function(response_raw) {
 					response = JSON.parse(response_raw);
 					
 					if(response.status == 0) {
