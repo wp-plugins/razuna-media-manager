@@ -29,10 +29,13 @@ require_once('util/razuna-functions.php');
 require_once('api/Razuna.class.php');
 require_once('pages/razuna-config.php');
 require_once('pages/razuna-media.php');
+require_once('pages/razuna-widget.php');
 
 add_action('init', 'razuna_admin_init');
 add_action('wp_head', 'razuna_frontend_head');
 add_filter('the_content','razuna_player_content');
+
+add_action('widgets_init', create_function('', 'return register_widget("RazunaWidget");'));
 
 function razuna_admin_init() {
 	add_action('admin_menu', 'razuna_admin_config_page');

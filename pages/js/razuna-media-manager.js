@@ -28,6 +28,8 @@ if(jQuery) (function($){
 			if(o.collapseExpandSpeed == undefined) o.collapseExpandSpeed = 500;
 			if(o.baseUrl == undefined) o.baseUrl = './';
 			if(o.afterUpload == undefined) o.afterUpload = false;
+			if(o.widgetMode == undefined) o.widgetMode = false;
+			if(o.widgetTextareaId == undefined) o.widgetTextareaId = '';
 			
 			$(this).each(function() {
 				
@@ -162,7 +164,7 @@ if(jQuery) (function($){
 							response += 			'<tr>';
 							response += 				'<td>&nbsp;</td>';
 							response += 				'<td>';
-							response += 					'<button class="button insert_into_post" type="button" onclick="jQuery(this).razunaInsert({ baseUrl: \'' + o.baseUrl + '\', id: \'' + file.id + '\'});">Insert into Post</button>';
+							response += 					'<button class="button insert_into_post" type="button" onclick="jQuery(this).razunaInsert({ baseUrl: \'' + o.baseUrl + '\', id: \'' + file.id + '\', widgetMode: ' + o.widgetMode + ', widgetTextareaId: \'' + o.widgetTextareaId + '\'});">Insert into Post</button>';
 							response += 					'<span class="razuna_link_text_empty_error" id="razuna_link_text_empty_error-' + file.id + '">The Link Text is empty.</span>';
 							response += 					'<span class="razuna_setting_to_shared_message" id="razuna_setting_to_shared_message-' + file.id + '">';
 							response += 						'<i><br />This asset needs to be shared, do you want to share this asset? <a href="#insert" onclick="jQuery(this).razunaShare({ id: \'' + file.id + '\', baseUrl: \'' + o.baseUrl + '\'})" class="razuna_share_answer" id="razuna_share_answer-' + file.id + '">Yes</a></i>';
@@ -192,6 +194,7 @@ if(jQuery) (function($){
 		},
 		
 		razunaInsert: function(o) {
+			if(o.widgetMode == undefined) o.widgetMode = false;
 			
 			$(this).each(function() {
 				function getImageTag(asset, div) {
@@ -250,18 +253,24 @@ if(jQuery) (function($){
 				}
 				linkTag = getLinkTag(asset, div, content);
 
-				var win = window.dialogArguments || opener || parent || top;
-				if (typeof win.send_to_editor == 'function') {
-					win.send_to_editor(linkTag);
-					if (typeof win.tb_remove == 'function') 
-						win.tb_remove();
-					return false;
+				if(o.widgetMode) {
+					parent.jQuery('#'+o.widgetTextareaId).val(parent.jQuery('#'+o.widgetTextareaId).val()+linkTag);
+					parent.tb_remove();
+				} else {
+					var win = window.dialogArguments || opener || parent || top;
+					if (typeof win.send_to_editor == 'function') {
+						win.send_to_editor(linkTag);
+						if (typeof win.tb_remove == 'function') 
+							win.tb_remove();
+						return false;
+					}
+					
+					tinyMCE = win.tinyMCE;
+					if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('content') ) {
+						tinyMCE.selectedInstance.getWin().focus();
+						tinyMCE.execCommand('mceInsertContent', false, linkTag);
+					} else win.edInsertContent(win.edCanvas, linkTag);
 				}
-				tinyMCE = win.tinyMCE;
-				if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('content') ) {
-					tinyMCE.selectedInstance.getWin().focus();
-					tinyMCE.execCommand('mceInsertContent', false, linkTag);
-				} else win.edInsertContent(win.edCanvas, linkTag);
 
 				return false;
 			});

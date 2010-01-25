@@ -75,7 +75,11 @@ function media_upload_razuna_form() {
 		
 		function init() {
 			jQuery('#file_browser').razunaInit({
-				baseUrl: '<?php _e(razuna_plugin_url()); ?>'
+				baseUrl: '<?php _e(razuna_plugin_url()); ?>',
+				<?php if($_GET['widgetMode'] == 'true') { ?>
+					widgetMode: true,
+					widgetTextareaId: '<?php _e($_GET['widgetTextareaId']); ?>'
+				<?php } ?>
 			});
 		}
 	</script>
