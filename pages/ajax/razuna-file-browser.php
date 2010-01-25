@@ -33,19 +33,12 @@ try {
 		$razuna_api->set_session_token($_SESSION['razuna-sessiontoken']);
 	}
 	
-	if($_POST['dir'] == 0) {
-		// get users home folder
-		$home_folder = $razuna_api->getRootFolders();
-		if($home_folder == null) {
-			throw new RazunaException("Could not find the user's home folder");
-		} else {
-			$_POST['dir'] = $home_folder->id;
-		}
-	}
-	
 	$response['files'] = array();
 	// get folders
-	$folders = $razuna_api->getFolders($_POST['dir']);
+	if($_POST['dir'] == 0)
+		$folders = $razuna_api->getRootFolders();
+	else
+		$folders = $razuna_api->getFolders($_POST['dir']);
 	if(count($folders) > 0) {
 		foreach($folders as $folder) {
 			$folder_arr['type'] = get_class($folder);
