@@ -51,6 +51,7 @@ function razuna_admin_config_page() {
 }
 
 function razuna_admin_register_settings() {
+	register_setting('razuna', 'razuna_servertype');
 	register_setting('razuna','razuna_hostname');
 	register_setting('razuna','razuna_hostid');
 	register_setting('razuna','razuna_dampath');

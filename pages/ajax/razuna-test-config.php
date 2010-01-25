@@ -17,6 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+$_POST['servertype'] = urldecode($_POST['servertype']);
 $_POST['hostid'] = urldecode($_POST['hostid']);
 $_POST['hostname'] = urldecode($_POST['hostname']);
 $_POST['username'] = urldecode($_POST['username']);
@@ -24,7 +25,11 @@ $_POST['password'] = urldecode($_POST['password']);
 
 require_once('../../../../../wp-load.php');
 require_once('../../razuna.php');
-$razuna_api = new Razuna($_POST['hostid'], $_POST['hostname'], $_POST['username'], $_POST['password'], false, Razuna::HOST_TYPE_ID);
+
+if($_POST['servertype'] == 'self')
+	$razuna_api = new Razuna($_POST['hostid'], $_POST['hostname'], $_POST['username'], $_POST['password'], false, Razuna::HOST_TYPE_ID);
+else
+	$razuna_api = new Razuna($_POST['hostname'], $_POST['username'], $_POST['password'], false, Razuna::HOST_TYPE_NAME);
 
 $response = array('status' => '0');
 

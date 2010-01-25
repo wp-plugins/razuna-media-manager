@@ -391,11 +391,16 @@ if(jQuery) (function($){
 				$(this).after('&nbsp;<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
 				
 				script = o.baseUrl + "pages/ajax/razuna-test-config.php?time=" + new Date().getTime();
+				if(jQuery("#razuna_servertype_self").is(":checked")) {
+					servertype = 'self';
+				} else {
+					servertype = 'hosted';
+				}
 				hostid = $("#razuna_hostid").val();
 				hostname = $("#razuna_hostname").val();
 				username = $("#razuna_username").val();
 				password = $("#razuna_password").val();
-				$.post(script, { hostid: hostid, hostname: hostname, username: username, password: password }, function(response_raw) {
+				$.post(script, { servertype: servertype, hostid: hostid, hostname: hostname, username: username, password: password }, function(response_raw) {
 					response = JSON.parse(response_raw);
 					
 					if(response.status == 0) {

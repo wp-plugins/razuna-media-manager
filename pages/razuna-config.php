@@ -34,14 +34,23 @@ function razuna_config() {
 		
 			<table class="form-table">
 				<tr valign="top">
-					<th scope="row"><label for="razuna_hostname"><?php _e('Hostname'); ?></label></th>
-					<td><input name="razuna_hostname" type="text" id="razuna_hostname" value="<?php echo get_option('razuna_hostname'); ?>" class="regular-text code" /> <span class="description"><?php _e('Example: yourcompany.razuna.com'); ?></span></td>
+					<th scope="row"><label for="razuna_servertype"><?php _e('Server Type'); ?></label></th>
+					<td>
+						<input id="razuna_servertype_hosted" type="radio" value="hosted" onchange="checkServerType();" name="razuna_servertype"<?php if(get_option('razuna_servertype') == 'hosted') { _e('checked="checked"'); } ?> />
+						<label for="razuna_servertype"> Hosted (razuna.com)</label>
+						<input id="razuna_servertype_self" type="radio" value="self" onchange="checkServerType();" name="razuna_servertype"<?php if(get_option('razuna_servertype') == 'self') { _e('checked="checked"'); } ?> />
+						<label for="razuna_servertype"> Self hosted</label>
+					</td>
 				</tr>
 				<tr valign="top">
+					<th scope="row"><label for="razuna_hostname"><?php _e('Hostname'); ?></label></th>
+					<td><input name="razuna_hostname" type="text" id="razuna_hostname" value="<?php echo get_option('razuna_hostname'); ?>" class="regular-text code" /> <span class="description"><?php _e('Example: yourcompany.razuna.com or localhost:8080/razuna'); ?></span></td>
+				</tr>
+				<tr valign="top" class="fields_self" style="display: none;">
 					<th scope="row"><label for="razuna_hostid"><?php _e('Host ID'); ?></label></th>
 					<td><input name="razuna_hostid" type="text" id="razuna_hostid" value="<?php echo get_option('razuna_hostid'); ?>" class="regular-text code" /> <span class="description"><?php _e('Example: 496'); ?></span></td>
 				</tr>
-				<tr valign="top">
+				<tr valign="top" class="fields_self" style="display: none;">
 					<th scope="row"><label for="razuna_hostid"><?php _e('DAM Path'); ?></label></th>
 					<td><input name="razuna_dampath" type="text" id="razuna_dampath" value="<?php echo get_option('razuna_dampath'); ?>" class="regular-text code" /> <span class="description"><?php _e('Example: /demo/dam'); ?></span></td>
 				</tr>
@@ -54,6 +63,16 @@ function razuna_config() {
 					<td><input name="razuna_password" type="password" id="razuna_password" value="<?php echo get_option('razuna_password'); ?>" class="regular-text code" /></td>
 				</tr>
 			</table>
+			<script type="text/javascript">
+				function checkServerType() {
+					if(jQuery("#razuna_servertype_self").is(":checked")) {
+						jQuery(".fields_self").show();
+					} else {
+						jQuery(".fields_self").hide();
+					}
+				}
+				checkServerType();
+			</script>
 			
 			<input type="hidden" name="action" value="update" />
 			<input type="hidden" name="page_options" value="razuna_hostname,razuna_hostid,razuna_username,razuna_password" />
