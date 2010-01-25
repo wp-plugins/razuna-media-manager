@@ -82,6 +82,7 @@ try {
 } catch(Exception $e) {
 	$response['status'] = '1';
 	$response['exception'] = get_class($e);
+	$response['message'] = $e->getMessage();
 }
 
 _e(json_encode($response));

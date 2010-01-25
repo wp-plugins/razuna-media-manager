@@ -34,6 +34,7 @@ if(jQuery) (function($){
 			$(this).each(function() {
 				
 				function showTree(c, t) {
+					$(c).addClass('wait');
 					var script = o.baseUrl + 'pages/ajax/razuna-file-browser.php?time=' + new Date().getTime();
 					$.post(script, { dir: t }, function(response) {
 						if(!preProcessAPIRequest(response)) return false;
@@ -186,7 +187,7 @@ if(jQuery) (function($){
 				if(o.afterUpload) {
 					$(this).append('<ul class="razunaMediaBrowser start"><li class="wait">Loading...<li></ul>');
 				} else {
-					$(this).html('<ul class="razunaMediaBrowser start"><li class="wait">Logging into the Razuna service...<li></ul>');
+					$(this).html('<ul class="razunaMediaBrowser start"><li>Logging into the Razuna service...<li></ul>');
 				}
 				showTree($(this), escape(o.root));
 				
