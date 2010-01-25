@@ -32,7 +32,6 @@ require_once('pages/razuna-media.php');
 require_once('pages/razuna-widget.php');
 
 add_action('init', 'razuna_admin_init');
-add_action('wp_head', 'razuna_frontend_head');
 add_filter('the_content','razuna_player_content');
 
 add_action('widgets_init', create_function('', 'return register_widget("RazunaWidget");'));
@@ -59,10 +58,6 @@ function razuna_admin_start_session() {
 	if (!session_id()) {
 		session_start();
 	}
-}
-
-function razuna_frontend_head() {
-	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/flowplayer-3.1.4.min.js\"></script>\n";
 }
 
 function razuna_player_content($content) {
