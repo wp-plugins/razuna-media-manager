@@ -43,11 +43,9 @@ class RazunaWidget extends WP_Widget {
 	function form($instance) {
 		$title = esc_attr($instance['title']);
 		$text = esc_attr($instance['text']);
-		wp_print_scripts('thickbox');
-		wp_print_styles('thickbox');
 		?>
 		<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:'); ?> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" /></label></p>
-		<a href="media-upload.php?tab=razuna&widgetMode=true&widgetTextareaId=<?php echo $this->get_field_id('text'); ?>&TB_iframe=true&width=640" class="thickbox" title="Razuna" style="text-decoration: none;"><img src="<?php _e(razuna_plugin_url() . 'pages/img/razuna-logo-bw-16.png'); ?>" alt="Razuna" /> Browse</a> | <a href="#" style="text-decoration: none;" onclick="jQuery('#<?php echo $this->get_field_id('text'); ?>').val('');">Clear</a><br />
+		<a onclick="tb_show(null,'media-upload.php?tab=razuna&widgetMode=true&widgetTextareaId=<?php echo $this->get_field_id('text'); ?>&TB_iframe=true&width=640',null);return false;" href="#" title="Razuna" style="text-decoration: none;"><img src="<?php _e(razuna_plugin_url() . 'pages/img/razuna-logo-bw-16.png'); ?>" alt="Razuna" /> Browse</a> | <a href="#" style="text-decoration: none;" onclick="jQuery('#<?php echo $this->get_field_id('text'); ?>').val('');">Clear</a><br />
 		<textarea class="widefat" rows="6" cols="20" id="<?php echo $this->get_field_id('text'); ?>" name="<?php echo $this->get_field_name('text'); ?>"><?php echo $text; ?></textarea>
 		<?php
 	}

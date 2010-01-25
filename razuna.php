@@ -41,6 +41,7 @@ function razuna_admin_init() {
 	add_action('admin_menu', 'razuna_admin_config_page');
 	add_action('admin_init', 'razuna_admin_start_session');
 	add_action('admin_init', 'razuna_admin_register_settings');
+	add_action('admin_head-widgets.php', 'razuna_admin_thickbox');
 }
 
 function razuna_admin_config_page() {
@@ -89,6 +90,11 @@ function razuna_player_content($content) {
 		}	
 	}
 	return $content;
+}
+
+function razuna_admin_thickbox() {
+	wp_print_scripts('thickbox');
+	wp_print_styles('thickbox');
 }
 
 function razuna_plugin_url() {
