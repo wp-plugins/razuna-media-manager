@@ -4,20 +4,22 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=CK3SH
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
 Requires at least: 2.8.0
 Tested up to: 2.9.1
-Stable tag: 0.6.0
+Stable tag: 0.7.0
 
-Allows to add Files from your Razuna account into Wordpress posts.
+Allows to add Files from your Razuna account into WordPress posts.
 
 == Description ==
 
-This Wordpress Plugin allows you to use any hosted Razuna service to host your media for your Wordpress powered blog.
+This WordPress Plugin allows you to use any hosted Razuna service to host your media for your WordPress powered blog.
 
-Once installed and configured, this plugin transparently integrates with your Wordpress blog.
+Once installed and configured, this plugin transparently integrates with your WordPress blog.
 You will find a "Razuna" Tab next to your regular "Upload" and "Media Library" tab, which allows you to easily browse and choose files which are hosted on the Razuna service.
 
 In a future version it will also allow you to upload files to your Razuna service.
 
 For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source software at http://www.razuna.org
+
+Supports WordPress, WordPress MU and BuddyPress
 
 == Screenshots ==
 
@@ -25,6 +27,12 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 2. Media Manager integration
 
 == Changelog ==
+
+= 0.7.0 =
+* New Feature: Test Razuna credentials right on the configuration page
+* New Feature: Media player (Flowplayer) integration for video and audio files
+* New Feature: Widget, add Razuna assets to the sidebar
+* Improvement: Suggesting title and description from the Razuna meta data
 
 = 0.6.0 =
 * New Features: Ability to upload files from the plugin
@@ -34,7 +42,7 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 * Integrate official Razuna PHP API class
 
 = 0.5.1 =
-* Fixed a bug where the options page could not save the settings in Wordpress MU
+* Fixed a bug where the options page could not save the settings in WordPress MU
 
 = 0.5.0 =
 * Fixed an issue where some shared items were displayed as private
@@ -47,5 +55,5 @@ For more information regarding Razuna checkout the Hosted (SaaS) Solution at htt
 == Installation ==
 
 1. Upload `razuna-media-media-manager` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the "Plugins" menu in Wordpress
+1. Activate the plugin through the "Plugins" menu in WordPress (be sure to activate the plugin site-wide on WordPress MU installations)
 1. Configure the plugin in the "Razuna Configuration" (or "Settings") screen by following the onscreen prompts.
