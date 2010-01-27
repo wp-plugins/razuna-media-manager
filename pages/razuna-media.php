@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 require_once('media-tabs/razuna-browser.php');
+require_once('media-tabs/razuna-slideshow-builder.php');
 
 add_action('media_buttons_context', 'razuna_media_buttons');
 add_action('media_upload_razuna', 'media_upload_razuna');
@@ -42,9 +43,9 @@ function media_upload_razuna() {
 }
 
 function media_upload_razuna_form() {
-	if(!isset($_GET['subtab'])) {
-		$_SERVER['QUERY_STRING'] = "subtab=browser&". $_SERVER['QUERY_STRING'];
-		$_GET['subtab'] = 'browser';
+	if(!isset($_GET['razuna_subtab'])) {
+		$_SERVER['QUERY_STRING'] = "razuna_subtab=browser&". $_SERVER['QUERY_STRING'];
+		$_GET['razuna_subtab'] = 'browser';
 	}
 		
 		
@@ -53,12 +54,15 @@ function media_upload_razuna_form() {
 	?>
 	<div id="media-upload-header">
 		<ul id="sidemenu">
-			<li><a href="?<?php _e($_SERVER['QUERY_STRING']) ?>"<?php if($_GET['subtab'] == 'browser') { _e('class="current"'); } ?>>Browser</a></li>
+			<li><a href="?<?php _e(preg_replace('/[\\?&]razuna_subtab=([^&#]*)/', 'razuna_subtab=browser', '?'.$_SERVER['QUERY_STRING'])) ?>"<?php if($_GET['razuna_subtab'] == 'browser') { _e('class="current"'); } ?>>Browser</a></li>
+			<li><a href="?<?php _e(preg_replace('/[\\?&]razuna_subtab=([^&#]*)/', 'razuna_subtab=slideshowbuilder', '?'.$_SERVER['QUERY_STRING'])) ?>"<?php if($_GET['razuna_subtab'] == 'slideshowbuilder') { _e('class="current"'); } ?>>Slideshow Builder</a></li>
 		</ul>
 	</div>
 	<?php
-	if($_GET['subtab'] == 'browser')
+	if($_GET['razuna_subtab'] == 'browser')
 		tabContentBrowser();
+	else if($_GET['razuna_subtab'] == 'slideshowbuilder')
+		tabContentSlideshowBuilder();
 	?>
 	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
 	<script type="text/javascript">
