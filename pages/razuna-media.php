@@ -40,8 +40,41 @@ function media_upload_razuna() {
 }
 
 function media_upload_razuna_form() {
+	if(!isset($_GET['subtab']))
+		$_GET['subtab'] = 'browser';
+		
 	$dir = dirname(__FILE__);
 	$pluginRootURL = str_replace('pages', '', get_option('siteurl').substr($dir, strpos($dir, '/wp-content')));
+	?>
+	<div id="media-upload-header">
+		<ul id="sidemenu">
+			<li><a href="#"<?php if($_GET['subtab'] == 'browser') { _e('class="current"'); } ?>>Browser</a></li>
+		</ul>
+	</div>
+	<?php
+	if($_GET['subtab'] == 'browser')
+		tabContentBrowser();
+	?>
+	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready( function() {
+			init();
+		});
+		
+		function init() {
+			jQuery('#file_browser').razunaInit({
+				baseUrl: '<?php _e(razuna_plugin_url()); ?>',
+				<?php if($_GET['widgetMode'] == 'true') { ?>
+					widgetMode: true,
+					widgetTextareaId: '<?php _e($_GET['widgetTextareaId']); ?>'
+				<?php } ?>
+			});
+		}
+	</script>
+	<?php
+}
+
+function tabContentBrowser() {
 	?>
 	<div id="razuna_media_wrapper">
 		<form>
@@ -67,22 +100,6 @@ function media_upload_razuna_form() {
 			<input type="submit" class="button" value="Upload" id="razuna_upload_button">
 		</form>
 	</div>
-	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
-	<script type="text/javascript">
-		jQuery(document).ready( function() {
-			init();
-		});
-		
-		function init() {
-			jQuery('#file_browser').razunaInit({
-				baseUrl: '<?php _e(razuna_plugin_url()); ?>',
-				<?php if($_GET['widgetMode'] == 'true') { ?>
-					widgetMode: true,
-					widgetTextareaId: '<?php _e($_GET['widgetTextareaId']); ?>'
-				<?php } ?>
-			});
-		}
-	</script>
 	<?php
 }
 
@@ -124,7 +141,7 @@ function razuna_media_css() {
 		#razuna_media_wrapper {
 			width: 640px;
 			top: 0;
-			position: absolute;
+			position: relative	;
 		}
 		.asset_info, .asset_info table { width: 100%; }
 		.asset_info table { border: 1px solid #DFDFDF; }
