@@ -47,7 +47,7 @@ function media_upload_razuna_form() {
 		<form>
 			<div class="razuna_media_navigation">
 				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaOpenUploadDiv({baseUrl: '<?php _e($pluginRootURL); ?>'});">Upload</a>
-				<a href="#" onclick="init();">Refresh</a>
+				<a href="#" onclick="init();"><img src="<?php _e(razuna_plugin_url()) ?>pages/img/refresh.png" alt="Refresh" /></a>
 			</div>
 			<div id="file_browser"></div>
 			<div class="clearer">&nbsp;</div>
