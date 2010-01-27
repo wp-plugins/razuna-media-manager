@@ -1,13 +1,6 @@
 <?php
 
 /*
-Plugin Name: Razuna Media Manager
-Plugin URI: http://chdorner.com/projects/2010/razuna-media-manager.html
-Description: Allows to add Files from your Razuna account into Wordpress posts.
-Version: 0.7.0
-Author: Christof Dorner
-Author URI: http://chdorner.com
-
 Copyright (C) 2010 Christof Dorner
 
 This program is free software: you can redistribute it and/or modify
@@ -22,7 +15,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 */
 
 function tabContentBrowser() {
