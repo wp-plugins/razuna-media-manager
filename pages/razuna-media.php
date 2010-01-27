@@ -17,6 +17,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+require_once('media-tabs/razuna-browser.php');
+
 add_action('media_buttons_context', 'razuna_media_buttons');
 add_action('media_upload_razuna', 'media_upload_razuna');
 add_action('admin_head', 'razuna_media_css');
@@ -71,35 +73,6 @@ function media_upload_razuna_form() {
 			});
 		}
 	</script>
-	<?php
-}
-
-function tabContentBrowser() {
-	?>
-	<div id="razuna_media_wrapper">
-		<form>
-			<div class="razuna_media_navigation">
-				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaOpenUploadDiv({baseUrl: '<?php _e($pluginRootURL); ?>'});">Upload</a>
-				<a href="#" onclick="init();"><img src="<?php _e(razuna_plugin_url()) ?>pages/img/refresh.png" alt="Refresh" /></a>
-			</div>
-			<div id="file_browser"></div>
-			<div class="clearer">&nbsp;</div>
-		</form>
-	</div>
-	<div id="razuna_media_wrapper_upload">
-		<form action="" name="up" method="post" enctype="multipart/form-data" id="razuna_uploader_form">
-			<div class="razuna_media_navigation">
-				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaCloseUploadDiv();">Close</a>
-			</div>
-			<input type="hidden" name="fa" value="c.apiupload" />
-			<input type="hidden" name="sessiontoken" id="razuna_upload_sessiontoken" />
-			<input type="hidden" name="redirectto" id="razuna_upload_redirecturl" />
-			<input type="file" id="filedata" name="filedata" />
-			into folder
-			<select name="destfolderid" id="razuna_upload_folders"></select>
-			<input type="submit" class="button" value="Upload" id="razuna_upload_button">
-		</form>
-	</div>
 	<?php
 }
 
