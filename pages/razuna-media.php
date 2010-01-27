@@ -42,15 +42,18 @@ function media_upload_razuna() {
 }
 
 function media_upload_razuna_form() {
-	if(!isset($_GET['subtab']))
+	if(!isset($_GET['subtab'])) {
+		$_SERVER['QUERY_STRING'] = "subtab=browser&". $_SERVER['QUERY_STRING'];
 		$_GET['subtab'] = 'browser';
+	}
+		
 		
 	$dir = dirname(__FILE__);
 	$pluginRootURL = str_replace('pages', '', get_option('siteurl').substr($dir, strpos($dir, '/wp-content')));
 	?>
 	<div id="media-upload-header">
 		<ul id="sidemenu">
-			<li><a href="#"<?php if($_GET['subtab'] == 'browser') { _e('class="current"'); } ?>>Browser</a></li>
+			<li><a href="?<?php _e($_SERVER['QUERY_STRING']) ?>"<?php if($_GET['subtab'] == 'browser') { _e('class="current"'); } ?>>Browser</a></li>
 		</ul>
 	</div>
 	<?php
