@@ -27,6 +27,7 @@ if(jQuery) (function($){
 			if(o.root == undefined) o.root = '0';
 			if(o.collapseExpandSpeed == undefined) o.collapseExpandSpeed = 500;
 			if(o.baseUrl == undefined) o.baseUrl = './';
+			if(o.tab == undefined) o.tab = 'browser';
 			if(o.afterUpload == undefined) o.afterUpload = false;
 			if(o.widgetMode == undefined) o.widgetMode = false;
 			if(o.widgetTextareaId == undefined) o.widgetTextareaId = '';
@@ -35,7 +36,10 @@ if(jQuery) (function($){
 				
 				function showTree(c, t) {
 					$(c).addClass('wait');
-					var script = o.baseUrl + 'pages/ajax/razuna-file-browser.php?time=' + new Date().getTime();
+					if(o.tab == 'slideshowbuilder')
+						var script = o.baseUrl + 'pages/ajax/razuna-file-slideshow-builder.php?time=' + new Date().getTime();
+					else
+						var script = o.baseUrl + 'pages/ajax/razuna-file-browser.php?time=' + new Date().getTime();
 					$.post(script, { dir: t }, function(response) {
 						if(!preProcessAPIRequest(response)) return false;
 						$(c).find('.start').html('');
@@ -140,20 +144,21 @@ if(jQuery) (function($){
 								response += 			'<td><strong>Alternate text:</strong></td>';
 								response += 			'<td><input type="text" class="alt" value="' + file.filename + '" /></td>';
 								response += 		'</tr>';
-								response += 		'<tr>';
-								response += 		'<tr>';
-								response += 			'<td><strong>Title:</strong></td>';
-								response += 			'<td><input type="text" class="title" value="' + file.description + '" /></td>';
-								response += 		'</tr>';
-								response += 		'<tr>';
-								response += 			'<td><strong>Link URL:</strong></td>';
-								response += 			'<td>';
-								response += 				'<input type="text" class="urlfield text" /><br />';
-								response += 				'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'\');">None</button>';
-								response += 				'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + file.url + '\');">File Original Size</button>';
-								response += 				'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + file.thumbnail + '\');">File Thumbnail Size</button>'
-								response += 			'</td>';
-								response += 		'</tr>';
+								if(o.tab == 'browser') {
+									response += 	'<tr>';
+									response += 		'<td><strong>Title:</strong></td>';
+									response += 		'<td><input type="text" class="title" value="' + file.description + '" /></td>';
+									response += 	'</tr>';
+									response += 	'<tr>';
+									response += 		'<td><strong>Link URL:</strong></td>';
+									response += 		'<td>';
+									response += 			'<input type="text" class="urlfield text" /><br />';
+									response += 			'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'\');">None</button>';
+									response += 			'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + file.url + '\');">File Original Size</button>';
+									response += 			'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + file.thumbnail + '\');">File Thumbnail Size</button>'
+									response += 		'</td>';
+									response += 	'</tr>';
+								}
 							} else if(file.kind == 'vid' || file.kind == 'aud') {
 								response += 		'<tr>';
 								response += 			'<td><strong>Width:</strong></td>';
@@ -174,7 +179,11 @@ if(jQuery) (function($){
 							response += 			'<tr>';
 							response += 				'<td>&nbsp;</td>';
 							response += 				'<td>';
-							response += 					'<button class="button insert_into_post" type="button" onclick="jQuery(this).razunaInsert({ baseUrl: \'' + o.baseUrl + '\', id: \'' + file.id + '\', widgetMode: ' + o.widgetMode + ', widgetTextareaId: \'' + o.widgetTextareaId + '\'});">Insert into Post</button>';
+							if(o.tab == 'browser') {
+								response += 				'<button class="button insert_into_post" type="button" onclick="jQuery(this).razunaInsert({ baseUrl: \'' + o.baseUrl + '\', id: \'' + file.id + '\', widgetMode: ' + o.widgetMode + ', widgetTextareaId: \'' + o.widgetTextareaId + '\'});">Insert into Post</button>';
+							} else if(o.tab == 'slideshowbuilder') {
+								response += 				'<button class="button insert_into_post" type="button" onclick="jQuery(this).razunaSlideShowBuilderInsertImage({ baseUrl: \'' + o.baseUrl + '\', id: \'' + file.id + '\', widgetMode: ' + o.widgetMode + ', widgetTextareaId: \'' + o.widgetTextareaId + '\'});">Add to slideshow</button>';
+							}
 							response += 					'<span class="razuna_link_text_empty_error" id="razuna_link_text_empty_error-' + file.id + '">The Link Text is empty.</span>';
 							response += 					'<span class="razuna_setting_to_shared_message" id="razuna_setting_to_shared_message-' + file.id + '">';
 							response += 						'<i><br />This asset needs to be shared, do you want to share this asset? <a href="#insert" onclick="jQuery(this).razunaShare({ id: \'' + file.id + '\', baseUrl: \'' + o.baseUrl + '\'})" class="razuna_share_answer" id="razuna_share_answer-' + file.id + '">Yes</a></i>';
@@ -284,6 +293,48 @@ if(jQuery) (function($){
 
 				return false;
 			});
+		},
+		
+		razunaSlideShowBuilderInsert: function(o) {
+			if(o.widgetMode == undefined) o.widgetMode = false;
+			
+			html = "[RAZUNA_SLIDESHOW=" + $("#razuna_slideshow_delay").val();
+			images = $("#sortable_images > li");
+			images_html = "";
+			max_height = 0;
+			for(i = 0; i < images.length; i++) {
+				img = $(images[i]).children("img");
+				images_html += "," + $(img).attr("src") + ";" + $(img).attr("alt");
+				if($(img).height() > max_height)
+					max_height = $(img).height();
+			}
+			html += "," + max_height + images_html + "]";
+			
+			if(o.widgetMode) {
+				parent.jQuery('#'+o.widgetTextareaId).val(parent.jQuery('#'+o.widgetTextareaId).val()+html);
+				parent.tb_remove();
+			} else {
+				var win = window.dialogArguments || opener || parent || top;
+				if (typeof win.send_to_editor == 'function') {
+					win.send_to_editor(html);
+					if (typeof win.tb_remove == 'function') 
+						win.tb_remove();
+					return false;
+				}
+				
+				tinyMCE = win.tinyMCE;
+				if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('content') ) {
+					tinyMCE.selectedInstance.getWin().focus();
+					tinyMCE.execCommand('mceInsertContent', false, html);
+				} else win.edInsertContent(win.edCanvas, html);
+			}
+		},
+		
+		razunaSlideShowBuilderInsertImage: function(o) {
+			div = $('#asset_info-' + o.id);
+			asset = JSON.parse($('#asset-' + o.id).val());
+			
+			$("#sortable_images").append('<li class="item"><img src="' + asset.thumbnail + '" alt="' + $(div).find('.alt').val() + '" /></li>');
 		},
 		
 		razunaShare: function(o) {
@@ -413,6 +464,5 @@ if(jQuery) (function($){
 				});
 			});
 		}
-		
 	});
 })(jQuery);

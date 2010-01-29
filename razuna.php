@@ -34,6 +34,7 @@ require_once('pages/razuna-widget.php');
 add_action('init', 'razuna_admin_init');
 add_action('wp_head', 'razuna_frontend_head');
 add_filter('the_content','razuna_player_content');
+add_filter('the_content','razuna_slideshow');
 
 add_action('widgets_init', create_function('', 'return register_widget("RazunaWidget");'));
 
@@ -66,13 +67,14 @@ function razuna_admin_start_session() {
 }
 
 function razuna_frontend_head() {
+	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/jquery-1.4.1.js\"></script>\n";
 	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/flowplayer-3.1.4.min.js\"></script>\n";
+	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/jquery.innerfade.js\"></script>\n";
 }
 
 function razuna_player_content($content) {
 	$regex = '/\[RAZUNA_PLAYER=([a-z0-9\:\.\-\&\_\/\|]+)\,([0-9]+)\,([a-z]+)\,([0-9]+)\,([0-9]+)\]/i';
 	$matches = array();
-
 	preg_match_all($regex, $content, $matches);
 	
 	if($matches[0][0] != '') {
@@ -92,6 +94,34 @@ function razuna_player_content($content) {
 			$content = str_replace($matches[0][$key], $replace, $content);
 		}	
 	}
+	return $content;
+}
+
+function razuna_slideshow($content) {
+	$regex = '/\[RAZUNA_SLIDESHOW=([0-9]+)\,([0-9]+)\,([a-z0-9\:\.\-\&\_\/\|\,\;]+)\]/i';
+	$matches = array();
+	preg_match_all($regex, $content, $matches);
+	
+	if($matches[0][0] != '') {
+		$replace = "";
+		$j = 1;
+		foreach($matches[0] as $key => $data) {
+			$replace .= "<div id=\"razuna_slideshow-". $j ."\">";
+			$delay = $matches[1][$key];
+			$max_height = $matches[2][$key];
+			$images_str = $matches[3][$key];
+			$images = split(",", $images_str);
+			for($i = 0; $i < count($images); $i++) {
+				$image = split(";", $images[$i]);
+				$replace .= "<div><img src=\"". $image[0] ."\" alt=\"". $image[1] ."\" /></div>";
+			}
+			$replace .= "</div>";
+			$replace .= "<script type=\"text/javascript\">jQuery(\"#razuna_slideshow-". $j ."\").innerfade({timeout: ". ($delay*1000) .", containerheight: ". $max_height ."});</script>";
+			$content = str_replace($matches[0][$key], $replace, $content);
+			$j++;
+		}
+	}
+	
 	return $content;
 }
 

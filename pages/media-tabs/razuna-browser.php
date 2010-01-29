@@ -43,6 +43,22 @@ function tabContentBrowser() {
 			<input type="submit" class="button" value="Upload" id="razuna_upload_button">
 		</form>
 	</div>
+	<script type="text/javascript">
+		jQuery(document).ready( function() {
+			init();
+		});
+		
+		function init() {
+			jQuery('#file_browser').razunaInit({
+				baseUrl: '<?php _e(razuna_plugin_url()); ?>',
+				tab: 'browser',
+				<?php if($_GET['widgetMode'] == 'true') { ?>
+					widgetMode: true,
+					widgetTextareaId: '<?php _e($_GET['widgetTextareaId']); ?>'
+				<?php } ?>
+			});
+		}
+	</script>
 	<?php
 }
 ?>
