@@ -33,9 +33,11 @@ require_once('pages/razuna-widget.php');
 
 add_action('init', 'razuna_admin_init');
 add_action('wp_head', 'razuna_frontend_head');
+add_action('wp_head', 'razuna_widget_content_filter');
 add_filter('the_content','razuna_player_content');
+add_filter('widget_content', 'razuna_player_content');
 add_filter('the_content','razuna_slideshow');
-
+add_filter('widget_content', 'razuna_slideshow');
 add_action('widgets_init', create_function('', 'return register_widget("RazunaWidget");'));
 
 function razuna_admin_init() {
@@ -104,9 +106,9 @@ function razuna_slideshow($content) {
 	
 	if($matches[0][0] != '') {
 		$replace = "";
-		$j = 1;
 		foreach($matches[0] as $key => $data) {
-			$replace .= "<div id=\"razuna_slideshow-". $j ."\">";
+			$nr = rand();
+			$replace .= "<div id=\"razuna_slideshow-". $nr ."\">";
 			$delay = $matches[1][$key];
 			$max_height = $matches[2][$key];
 			$images_str = $matches[3][$key];
@@ -116,7 +118,7 @@ function razuna_slideshow($content) {
 				$replace .= "<div><img src=\"". $image[0] ."\" alt=\"". $image[1] ."\" /></div>";
 			}
 			$replace .= "</div>";
-			$replace .= "<script type=\"text/javascript\">jQuery(\"#razuna_slideshow-". $j ."\").innerfade({timeout: ". ($delay*1000) .", containerheight: ". $max_height ."});</script>";
+			$replace .= "<script type=\"text/javascript\">jQuery(\"#razuna_slideshow-". $nr ."\").innerfade({timeout: ". ($delay*1000) .", containerheight: ". $max_height ."});</script>";
 			$content = str_replace($matches[0][$key], $replace, $content);
 			$j++;
 		}
@@ -143,4 +145,28 @@ function razuna_get_hosting_type() {
 		return 'self';
 }
 
+function razuna_widget_content_filter() {
+	global $wp_registered_widgets;
+	foreach ($wp_registered_widgets as $id => $widget) {
+		if(!$wp_registered_widgets[$id]['callback_wl_redirect']) {
+			array_push($wp_registered_widgets[$id]['params'],$id);
+			$wp_registered_widgets[$id]['callback_wl_redirect'] = $wp_registered_widgets[$id]['callback'];
+			$wp_registered_widgets[$id]['callback'] = 'razuna_widget_content_filter_callback';
+		}
+	}
+}
+
+function razuna_widget_content_filter_callback() {
+	global $wp_registered_widgets, $wp_reset_query_is_done;
+
+	$params = func_get_args();
+	$id = array_pop($params);
+	$callback = $wp_registered_widgets[$id]['callback_wl_redirect'];
+	
+	ob_start();
+	call_user_func_array($callback, $params);
+	$widget_content = ob_get_contents();
+	ob_end_clean();
+	echo apply_filters('widget_content', $widget_content, $id);
+}
 ?>
