@@ -6,7 +6,7 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 	protected $session_token;
 	
 	protected function setUp() {
-		$this->api = new Razuna(self::CONFIG_HOST_NAME, self::CONFIG_USERNAME, self::CONFIG_PASSWORD_CLEAR, false, Razuna::HOST_TYPE_NAME);
+		$this->api = new Razuna(self::CONFIG_HOST_ID, self::CONFIG_HOST_NAME, self::CONFIG_USERNAME, self::CONFIG_PASSWORD_CLEAR, false, Razuna::HOST_TYPE_ID);
 		$session_token = $this->api->login();
 	}
 	
@@ -23,9 +23,13 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 	
 	public function testGetFoldersTree() {
 		$folders = $this->api->getFoldersTree();
-		$this->assertEquals('My Folder', $folders[0]->name);
+		foreach($folders as $folder) {
+			if($folder->name == 'phpunit')
+				$home_folder = $folder;
+		}
+		$this->assertEquals('phpunit', $home_folder->name);
 		
-		$my_folder_subfolders = $folders[0]->subfolders;
+		$my_folder_subfolders = $home_folder->subfolders;
 		$this->assertEquals('Folder 1', $my_folder_subfolders[0]->name);
 		$this->assertEquals('Folder 2', $my_folder_subfolders[1]->name);
 		
@@ -67,7 +71,7 @@ class FolderTest extends PHPUnit_Framework_TestCase implements Base {
 	public function testGetAssets() {
 		$folders = $this->api->getRootFolders();
 		foreach($folders as $folder) {
-			if($folder->name == 'My Folder')
+			if($folder->name == 'phpunit')
 				$home_folder = $folder;
 		}
 		

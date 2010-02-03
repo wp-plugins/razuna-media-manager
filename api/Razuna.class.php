@@ -51,6 +51,12 @@ class Razuna {
 	const ASSET_TYPE_DOCUMENT		= 'doc';
 	const ASSET_TYPE_AUDIO			= 'aud';
 	
+	const DOC_TYPE_EMPTY				= 'empty';
+	const DOC_TYPE_PDF					= 'pdf';
+	const DOC_TYPE_EXCEL				= 'xls';
+	const DOC_TYPE_WORD					= 'doc';
+	const DOC_TYPE_OTHER				= 'other';
+	
 	private $soap_authentication;
 	private $soap_folder;
 	private $soap_collection;
@@ -369,6 +375,78 @@ class Razuna {
 		
 		return null;
 	}
+	
+	/* ************************
+	 *          HOSTS         *
+	 ************************** */
+	
+	private function initHosts() {
+    if (!is_object($this->soap_hosts)) {
+      $this->soap_hosts = $this->buildSoapClient(self::HOSTS_URI);
+    }
+  }
+	
+	public function getHosts($session_token = null) {
+		$this->initHosts();
+		
+		if($session_token == null)
+			$session_token = $this->session_token;
+			
+		$response = $this->soap_hosts->gethosts($session_token);
+		$xml_result = simplexml_load_string($response);
+		if($this->is_session_timed_out($xml_result)) {
+			$this->login();
+			$this->getHosts($session_token);
+		}
+		
+		if($xml_result->responsecode == 1 && $xml_result->message != '')
+			throw new RazunaException($xml_result->message);
+			
+		$hosts = array();
+		if($xml_result->responsecode == 0) {
+			foreach($xml_result->host as $xml_host) {
+				$host = new RazunaHost((int)$xml_host->id, (string)$xml_host->name, (string)$xml_host->path, (string)$xml_host->prefix);
+				$hosts[] = $host;
+			}
+		}
+		return $hosts;
+	}
+	
+	/* ************************
+	 *         SEARCH         *
+	 ************************** */
+	
+	private function initSearch() {
+    if (!is_object($this->soap_search)) {
+      $this->soap_search = $this->buildSoapClient(self::SEARCH_URI);
+    }
+  }
+
+	private function searchAssets($searchfor, $session_token = null, $offset = 0, $maxrows = 0, $show = self::ASSET_TYPE_ALL, $doctype = self::DOC_TYPE_EMPTY) {
+		$this->initSearch();
+		
+		if($session_token == null)
+			$session_token = $this->session_token;
+			
+		$response = $this->soap_search->searchassets($session_token, $searchfor, $offset, $maxrows, $show, $doctype);
+		$xml_result = simplexml_load_string($response);
+		if($this->is_session_timed_out($xml_result)) {
+			$this->login();
+			$this->searchAssets($searchfor, $session_token, $offset, $maxrows, $show, $doctype);
+		}
+		
+		if($xml_result->responsecode == 1 && $xml_result->message != '')
+			throw new RazunaException($xml_result->message);
+			
+		$assets = array();
+		if($xml_result->responsecode == 0) {
+			foreach($xml_result->listassets->asset as $xml_asset) {
+				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (int)$xml_asset->folderid, (string)$xml_asset->thumbnail);
+				$assets[] = $asset;
+			}
+		}
+		return $assets;
+	}
 
 	/* ************************
    *     MISCELLANEOUS      *
@@ -561,6 +639,20 @@ class RazunaAsset {
 	public function isDocument() { return ($this->kind == Razuna::ASSET_TYPE_DOCUMENT); }
 	public function isImage() { return ($this->kind == Razuna::ASSET_TYPE_IMAGE); }
 	public function isVideo() { return ($this->kind == Razuna::ASSET_TYPE_VIDEO); }
+}
+
+class RazunaHost {
+	public $id;
+	public $name;
+	public $path;
+	public $prefix;
+	
+	function __construct($id, $name, $path, $prefix) {
+		$this->id = $id;
+		$this->name = $name;
+		$this->path = $path;
+		$this->prefix = $prefix;
+	}
 }
 
 ?>
