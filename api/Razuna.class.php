@@ -447,6 +447,148 @@ class Razuna {
 		}
 		return $assets;
 	}
+	
+	/* ************************
+	 *       COLLECTION       *
+	 ************************** */
+	
+	private function initCollection() {
+    if (!is_object($this->soap_collection)) {
+      $this->soap_collection = $this->buildSoapClient(self::COLLECTION_URI);
+    }
+  }
+
+	public function getCollectionsTree($session_token = null) {
+		$this->initCollection();
+		
+		if($session_token == null)
+			$session_token = $this->session_token;
+			
+		$response = $this->soap_collection->getcollectionstree($session_token, 0);
+		$xml_result = simplexml_load_string($response);
+		if($this->is_session_timed_out($xml_result)) {
+			$this->login();
+			$this->getCollectionsTree($session_token);
+		}
+		
+		if($xml_result->responsecode == 1 && $xml_result->message != '')
+			throw new RazunaException($xml_result->message);
+			
+		$folders = array();
+		if($xml_result->responsecode == 0) {
+			foreach($xml_result->listcollections->collection as $xml_collection) {
+				$folders[] = $this->parseCollectionsTreeFolder($xml_collection);
+			}
+		}
+		return $folders;
+	}
+	
+	private function parseCollectionsTreeFolder($xml_collection) {
+		$folder = new RazunaFolder((string)$xml_collection->collectionid, (string)$xml_collection->collectionname, ((string)$xml_collection->hassubcollection == 'true'), (int)$xml_collection->collectionowner, (int)$xml_collection->collectionlevel, (int)$xml_collection->parentid);
+		if($folder->has_subfolders) {
+			$subfolders = $this->parseCollectionsTreeSubfolders($xml_collection);
+			$folder->addAllSubfolders($subfolders);
+		}
+		return $folder;
+	}
+	
+	private function parseCollectionsTreeSubfolders($parent) {
+		$folders = array();
+		if(count($parent->subcollection) > 0) {
+			foreach($parent->subcollection as $xml_collection) {
+				$folders[] = $this->parseCollectionsTreeFolder($xml_collection);
+			}
+		} else {
+			$folders = array($this->parseCollectionsTreeFolder($parent->subcollection));
+		}
+		return $folders;
+	}
+	
+	public function getCollectionsTreeFlat($session_token = null) {
+		if($session_token == null)
+			$session_token = $this->session_token;
+		
+		$folders = $this->getCollectionsTree($session_token);
+		$folders_arr = array();
+		if(count($folders) > 0) {
+			foreach($folders as $folder) {
+				$folders_arr[] = $folder;
+				$subfolders = $this->getCollectionsTreeFlatSubfolders($folder);
+				foreach($subfolders as $subfolder) {
+					$folders_arr[] = $subfolder;
+				}
+			}
+		}
+		return $folders_arr;
+	}
+	
+	private function getCollectionsTreeFlatSubfolders($folder) {
+		$folders_arr = array();
+		
+		if($folder->has_subfolders) {
+			foreach($folder->subfolders as $subfolder) {
+				$folders_arr[] = $subfolder;
+				$sub_subfolders = $this->getCollectionsTreeFlatSubfolders($subfolder);
+				foreach($sub_subfolders as $sub_subfolder) {
+					$folders_arr[] = $sub_subfolder;
+				}
+			}
+		}
+		return $folders_arr;
+	}
+	
+	public function getCollections($folderid = 2, $session_token = null) {
+		$this->initCollection();
+		
+		if($session_token == null)
+			$session_token = $this->session_token;
+		
+		$response = $this->soap_collection->getcollections($session_token, $folderid, 0);
+		$xml_result = simplexml_load_string($response);
+		if($this->is_session_timed_out($xml_result)) {
+			$this->login();
+			$this->getCollections($folderid, $session_token);
+		}
+		
+		if($xml_result->responsecode == 1)
+			throw new RazunaException($xml_result->message);
+		
+		$collections = array();	
+		foreach($xml_result->listcollections->collection as $xml_collection) {
+			$collection = new RazunaCollection((string)$xml_collection->collectionid, (string)$xml_collection->collectionname, (int)$xml_collection->totalassets, (int)$xml_collection->totalimg, (int)$xml_collection->totalvid, (int)$xml_collection->totaldoc, (int)$xml_collection->totalaud);
+				$collections[] = $collection;
+		}
+		
+		return $collections;
+	}
+	
+	public function getCollectionAssets($collectionid, $session_token = null) {
+		$this->initCollection();
+		
+		if($session_token == null)
+			$session_token = $this->session_token;
+		
+		$response = $this->soap_collection->getassets($session_token, $collectionid);
+		$xml_result = simplexml_load_string($response);
+		if($this->is_session_timed_out($xml_result)) {
+			$this->login();
+			$this->getCollectionAssets($collectionid, $session_token);
+		}
+		
+		if($xml_result->responsecode == 1)
+			throw new RazunaException($xml_result->message);
+		
+		$assets = array();
+		if($xml_result->responsecode == 0) {
+			foreach($xml_result->listassets->asset as $xml_asset) {
+				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (int)$xml_asset->folderid, (string)$xml_asset->thumbnail);
+				$assets[] = $asset;
+			}
+		}
+		return $assets;
+		
+		return $collections;
+	}
 
 	/* ************************
    *     MISCELLANEOUS      *
@@ -568,6 +710,9 @@ class RazunaFolder {
 		case 11:
 			self::__construct2($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5], $argv[6], $argv[7], $argv[8], $argv[9], $argv[10]);
 			break;
+		case 6:
+			self::__construct3($argv[0], $argv[1], $argv[2], $argv[3], $argv[4], $argv[5]);
+			break;
 		}
 	}
 	
@@ -593,6 +738,16 @@ class RazunaFolder {
 		$this->total_video = $total_video;
 		$this->total_document = $total_document;
 		$this->total_audio = $total_audio;
+		$this->owner = $owner;
+		$this->level = $level;
+		$this->parent_id = $parent_id;
+		$this->processLevelName();
+	}
+	
+	function __construct3($id, $name, $has_subfolders, $owner, $level, $parent_id) {
+		$this->id = $id;
+		$this->name = $name;
+		$this->has_subfolders = $has_subfolders;
 		$this->owner = $owner;
 		$this->level = $level;
 		$this->parent_id = $parent_id;
@@ -652,6 +807,26 @@ class RazunaHost {
 		$this->name = $name;
 		$this->path = $path;
 		$this->prefix = $prefix;
+	}
+}
+
+class RazunaCollection {
+	public $id;
+	public $name;
+	public $total_assets;
+	public $total_img;
+	public $total_vid;
+	public $total_doc;
+	public $total_aud;
+	
+	function __construct($id, $name, $total_assets, $total_img, $total_vid, $total_doc, $total_aud) {
+		$this->id = $id;
+		$this->name = $name;
+		$this->total_assets = $total_assets;
+		$this->total_img = $total_img;
+		$this->total_vid = $total_vid;
+		$this->total_doc = $total_doc;
+		$this->total_aud = $total_aud;
 	}
 }
 

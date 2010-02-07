@@ -6,6 +6,7 @@ require_once 'tests/AuthenticationTest.php';
 require_once 'tests/UserTest.php';
 require_once 'tests/FolderTest.php';
 require_once 'tests/HostsTest.php';
+require_once 'tests/CollectionTest.php';
 
 class RazunaTest extends PHPUnit_Framework_TestSuite {
 	public static function suite() {
@@ -14,6 +15,7 @@ class RazunaTest extends PHPUnit_Framework_TestSuite {
 		$suite->addTestSuite('UserTest');
 		$suite->addTestSuite('FolderTest');
 		$suite->addTestSuite('HostsTest');
+		$suite->addTestSuite('CollectionTest');
 		return $suite;
 	}
 }
