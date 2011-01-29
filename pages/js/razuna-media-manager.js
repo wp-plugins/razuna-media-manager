@@ -109,12 +109,12 @@ if(jQuery) (function($){
 							response += 			'<tr>';
 							if(file.kind == 'img') {
 								response += 			'<td>';
-								if(json.hostingtype == 'hosted' && !file.shared ) {
+								/* if(json.hostingtype == 'hosted' && !file.shared ) {
 									response += 			'<small>Thumbnail being showed<br />when shared</small>'
-								} else {
+								} else { */
 									response += 			'<img src="' + file.thumbnail + '" /></td>';
-								}
-								response += 			'</td>';
+								/* } */
+								// response += 			'</td>';
 								response +=				'<td>';
 							} else {
 								response += 			'<td colspan="2">';
