@@ -121,9 +121,9 @@ if(jQuery) (function($){
 							}
 							response +=						'<strong>File name:</strong> ' + file.filename + '<br />';
 							response += 					'<strong>Kind:</strong> ' + json.files[i]['kind_description'] + '<br />';
-							if(json.hostingtype == 'hosted') {
+							/* if(json.hostingtype == 'hosted') {
 								response += 				'<strong>Shared:</strong> ' + json.files[i]['shared_description'] + '<br />';
-							}
+							} */
 							response += 				'</td>';
 							response += 			'</tr>';
 							if(file.kind == 'img') {
@@ -258,7 +258,7 @@ if(jQuery) (function($){
 				div = $('#asset_info-' + o.id);
 				asset = JSON.parse($('#asset-' + o.id).val());
 
-				if(!asset.shared && $('#asset-' + o.id + '-hostingtype').val() == 'hosted') { $(div).find('#razuna_setting_to_shared_message-' + o.id).attr('style', 'display: inline;'); return false; }
+				//if(!asset.shared && $('#asset-' + o.id + '-hostingtype').val() == 'hosted') { $(div).find('#razuna_setting_to_shared_message-' + o.id).attr('style', 'display: inline;'); return false; }
 
 				content = '';
 				if(asset.kind == 'img') { 
@@ -346,7 +346,7 @@ if(jQuery) (function($){
 
 			script = o.baseUrl + "pages/ajax/razuna-file-share.php?time=" + new Date().getTime();
 			$.post(script, { assetid: asset.id, assetkind: asset.kind, dir: asset.folder_id }, function(response) {
-				if(response.status == '0') {
+				//if(response.status == '0') {
 					new_asset = JSON.parse(response.obj);
 					// check if link needs to be replaced
 					urlfield = $(div).find('.urlfield').val();
@@ -357,10 +357,10 @@ if(jQuery) (function($){
 					new_asset.shared = true;
 					$("#asset-" + o.id).val(JSON.stringify(new_asset));
 					$(div).razunaInsert({id: o.id});
-				} else {
+				//} else {
 					$(div).find('.razuna_share_loading').hide();
 					$(div).find('.razuna_share_failed').show();
-				}
+				//}
 			}, "json");
 		},
 		
