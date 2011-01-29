@@ -152,7 +152,7 @@ class Razuna {
 			$this->getSessionuser($session_token);
 		}
 		
-		$user = new RazunaUser((int)$xml_result->userid, (string)$xml_result->loginname, (string)$xml_result->email, (string)$xml_result->firstname, (string)$xml_result->lastname);
+		$user = new RazunaUser((string)$xml_result->userid, (string)$xml_result->loginname, (string)$xml_result->email, (string)$xml_result->firstname, (string)$xml_result->lastname);
 		return $user;
 	}
 	
