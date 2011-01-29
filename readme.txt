@@ -6,7 +6,7 @@ Requires at least: 2.8.0
 Tested up to: 3.0.4
 Stable tag: 0.8.0
 
-Allows to add Files from your Razuna account into WordPress posts.
+This plugin allows to transparently load images, videos, audios and documents from the Razuna Digital Asset Management to your Wordpress site. For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source version at http://www.razuna.org
 
 == Description ==
 
