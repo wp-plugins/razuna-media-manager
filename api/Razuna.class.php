@@ -201,7 +201,7 @@ class Razuna {
 		
 		$folders = array();	
 		foreach($xml_result->listfolders->folder as $xml_folder) {
-			$folder = new RazunaFolder((string)$xml_folder->folderid, (string)$xml_folder->foldername, (boolean)$xml_folder->hassubfolder, (int)$xml_folder->totalassets, (int)$xml_folder->totalimg, (int)$xml_folder->totalvid, (int)$xml_folder->totaldoc, (int)$xml_folder->totalaud, (int)$xml_folder->folderowner);
+			$folder = new RazunaFolder((string)$xml_folder->folderid, (string)$xml_folder->foldername, (boolean)$xml_folder->hassubfolder, (int)$xml_folder->totalassets, (int)$xml_folder->totalimg, (int)$xml_folder->totalvid, (int)$xml_folder->totaldoc, (int)$xml_folder->totalaud, (string)$xml_folder->folderowner);
 			if($folder->id != $folderid)
 				$folders[] = $folder;
 		}
@@ -253,7 +253,7 @@ class Razuna {
 	}
 	
 	private function parseFoldersTreeFolder($xml_folder) {
-		$folder = new RazunaFolder((string)$xml_folder->folderid, (string)$xml_folder->foldername, ((string)$xml_folder->hassubfolder == 'true'), (int)$xml_folder->totalassets, (int)$xml_folder->totalimg, (int)$xml_folder->totalvid, (int)$xml_folder->totaldoc, (int)$xml_folder->totalaud, (int)$xml_folder->folderowner, (int)$xml_folder->folderlevel, (int)$xml_folder->parentid);
+		$folder = new RazunaFolder((string)$xml_folder->folderid, (string)$xml_folder->foldername, ((string)$xml_folder->hassubfolder == 'true'), (int)$xml_folder->totalassets, (int)$xml_folder->totalimg, (int)$xml_folder->totalvid, (int)$xml_folder->totaldoc, (int)$xml_folder->totalaud, (string)$xml_folder->folderowner, (int)$xml_folder->folderlevel, (string)$xml_folder->parentid);
 		if($folder->has_subfolders) {
 			$subfolders = $this->parseFoldersTreeSubfolders($xml_folder);
 			$folder->addAllSubfolders($subfolders);
@@ -325,7 +325,7 @@ class Razuna {
 		$assets = array();
 		if($xml_result->responsecode == 0) {
 			foreach($xml_result->listassets->asset as $xml_asset) {
-				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (int)$xml_asset->folderid, (string)$xml_asset->thumbnail);
+				$asset = new RazunaAsset((string)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->folderid, (string)$xml_asset->thumbnail);
 				$assets[] = $asset;
 			}
 		}
@@ -441,7 +441,7 @@ class Razuna {
 		$assets = array();
 		if($xml_result->responsecode == 0) {
 			foreach($xml_result->listassets->asset as $xml_asset) {
-				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (int)$xml_asset->folderid, (string)$xml_asset->thumbnail);
+				$asset = new RazunaAsset((string)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->folderid, (string)$xml_asset->thumbnail);
 				$assets[] = $asset;
 			}
 		}
@@ -484,7 +484,7 @@ class Razuna {
 	}
 	
 	private function parseCollectionsTreeFolder($xml_collection) {
-		$folder = new RazunaFolder((string)$xml_collection->collectionid, (string)$xml_collection->collectionname, ((string)$xml_collection->hassubcollection == 'true'), (int)$xml_collection->collectionowner, (int)$xml_collection->collectionlevel, (int)$xml_collection->parentid);
+		$folder = new RazunaFolder((string)$xml_collection->collectionid, (string)$xml_collection->collectionname, ((string)$xml_collection->hassubcollection == 'true'), (string)$xml_collection->collectionowner, (int)$xml_collection->collectionlevel, (string)$xml_collection->parentid);
 		if($folder->has_subfolders) {
 			$subfolders = $this->parseCollectionsTreeSubfolders($xml_collection);
 			$folder->addAllSubfolders($subfolders);
@@ -581,7 +581,7 @@ class Razuna {
 		$assets = array();
 		if($xml_result->responsecode == 0) {
 			foreach($xml_result->listassets->asset as $xml_asset) {
-				$asset = new RazunaAsset((int)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (int)$xml_asset->folderid, (string)$xml_asset->thumbnail);
+				$asset = new RazunaAsset((string)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->folderid, (string)$xml_asset->thumbnail);
 				$assets[] = $asset;
 			}
 		}
