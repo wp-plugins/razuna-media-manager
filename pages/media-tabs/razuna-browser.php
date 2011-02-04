@@ -22,7 +22,7 @@ function tabContentBrowser() {
 	<div id="razuna_media_wrapper">
 		<form>
 			<div class="razuna_media_navigation">
-				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaOpenUploadDiv({baseUrl: '<?php _e($pluginRootURL); ?>'});">Upload</a>
+				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaOpenUploadDiv({baseUrl: '<?php _e(razuna_plugin_url()) ?>'});">Upload</a>
 				<a href="#" onclick="init();"><img src="<?php _e(razuna_plugin_url()) ?>pages/img/refresh.png" alt="Refresh" /></a>
 			</div>
 			<div id="file_browser"></div>

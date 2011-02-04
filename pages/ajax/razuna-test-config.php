@@ -38,7 +38,7 @@ try {
 		$razuna_api->login();
 		$_SESSION['razuna-sessiontoken'] = $razuna_api->getSessionToken();
 	} else {
-		$razuna_api->set_session_token($_SESSION['razuna-sessiontoken']);
+		$razuna_api->setSessionToken($_SESSION['razuna-sessiontoken']);
 	}
 	$response['message'] = 'success';
 } catch(Exception $e) {

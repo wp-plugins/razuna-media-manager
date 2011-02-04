@@ -368,7 +368,7 @@ if(jQuery) (function($){
 			$('#razuna_upload_link').parent().prepend('<span id="razuna_media_upload_wait" class="wait">&nbsp;</span>');
 			$('#razuna_upload_link').hide();
 			
-			script = o.baseUrl + "pages/ajax/razuna-prepare-uploader.php?time=" + new Date().getTime();
+			var script = o.baseUrl + "pages/ajax/razuna-prepare-uploader.php?time=" + new Date().getTime();
 			$.get(script, function(response_raw) {
 				response = JSON.parse(response_raw);
 				

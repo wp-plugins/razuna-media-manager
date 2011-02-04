@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=CK3SH
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
 Requires at least: 2.8.0
 Tested up to: 3.0.4
-Stable tag: 0.8.0
+Stable tag: 0.8.1
 
 This plugin allows to transparently load images, videos, audios and documents from the Razuna Digital Asset Management to your Wordpress site. For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source version at http://www.razuna.org
 
@@ -25,6 +25,10 @@ Supports WordPress, WordPress MU and BuddyPress
 2. Media Manager integration
 
 == Changelog ==
+
+= 0.8.1 =
+* Bug Fix: Could not log in to Razuna properly
+* Bug Fix: Upload link did not work as expected
 
 = 0.8.0 =
 * Improvement: Updated plugin to work with the latest Razuna 1.4.2 release
