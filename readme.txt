@@ -3,7 +3,7 @@ Contributors: chdorner, Razuna Ltd.
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=CK3SHKRLZ9XAY&lc=CH&item_name=Razuna%20Wordpress%20Plugin&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted
 Tags: media, admin, razuna, mirror, uploads, images, photos, files
 Requires at least: 2.8.0
-Tested up to: 3.0.4
+Tested up to: 3.0.5
 Stable tag: 0.8.5
 
 This plugin allows to transparently load images, videos, audios and documents from the Razuna Digital Asset Management to your Wordpress site. For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source version at http://www.razuna.org
@@ -74,5 +74,6 @@ Supports WordPress, WordPress MU and BuddyPress
 1. Activate the plugin through the "Plugins" menu in WordPress (be sure to activate the plugin site-wide on WordPress MU installations)
 1. Configure the plugin in the "Razuna Configuration" (or "Settings") screen by following the onscreen prompts.
 
-Troubleshoot:
+Troubleshooting:
 If you can not connect to your Razuna Server then make sure that your PHP is configured with the SOAP client!
+
