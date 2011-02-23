@@ -185,11 +185,12 @@ class Razuna {
 
 	public function getFolders($folderid = 0, $session_token = null) {
 		$this->initFolder();
-		
+		//echo 'folderid='.$folderid.'----------';
 		if($session_token == null)
 			$session_token = $this->session_token;
 		
 		$response = $this->soap_folder->getfolders($session_token, $folderid, 0);
+		//echo $response;
 		$xml_result = simplexml_load_string($response);
 		if($this->is_session_timed_out($xml_result)) {
 			$this->login();
@@ -201,11 +202,20 @@ class Razuna {
 		
 		$folders = array();	
 		foreach($xml_result->listfolders->folder as $xml_folder) {
-			$folder = new RazunaFolder((string)$xml_folder->folderid, (string)$xml_folder->foldername, (boolean)$xml_folder->hassubfolder, (int)$xml_folder->totalassets, (int)$xml_folder->totalimg, (int)$xml_folder->totalvid, (int)$xml_folder->totaldoc, (int)$xml_folder->totalaud, (string)$xml_folder->folderowner);
-			if($folder->id != $folderid)
-				$folders[] = $folder;
+			
+			$folder = new RazunaFolder((string)$xml_folder->folderid, (string)$xml_folder->foldername, (string)$xml_folder->hassubfolder, (int)$xml_folder->totalassets, (int)$xml_folder->totalimg, (int)$xml_folder->totalvid, (int)$xml_folder->totaldoc, (int)$xml_folder->totalaud, (string)$xml_folder->folderowner);
+			
+			//if($folder->id != $folderid)
+			$nameContMyFolder = stripos($folder->level_name,'My Folder');
+			if($folderid === 0){
+				if($nameContMyFolder === false){
+					$folders[] = $folder;
+				}
+			}else{
+				if($folder->id != $folderid)
+					$folders[] = $folder;
+			}
 		}
-		
 		return $folders;
 	}
 	
@@ -220,13 +230,14 @@ class Razuna {
 		
 		$folders = $this->getFolders(0, $session_token);
 		
+		
 		$folders_owner = array();
 		foreach($folders as $folder) {
 			if($folder->owner == $userid) {
 				$folders_owner[] = $folder;
 			}
 		}
-		return $folders_owner;
+		return $folders;
 	}
 	
 	public function getFoldersTree($session_token = null) {

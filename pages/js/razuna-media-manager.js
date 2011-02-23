@@ -36,10 +36,7 @@ if(jQuery) (function($){
 				
 				function showTree(c, t) {
 					$(c).addClass('wait');
-					if(o.tab == 'slideshowbuilder')
-						var script = o.baseUrl + 'pages/ajax/razuna-file-slideshow-builder.php?time=' + new Date().getTime();
-					else
-						var script = o.baseUrl + 'pages/ajax/razuna-file-browser.php?time=' + new Date().getTime();
+					var script = o.baseUrl + 'pages/ajax/razuna-file-browser.php?time=' + new Date().getTime();
 					$.post(script, { dir: t }, function(response) {
 						if(!preProcessAPIRequest(response)) return false;
 						$(c).find('.start').html('');
@@ -293,48 +290,6 @@ if(jQuery) (function($){
 
 				return false;
 			});
-		},
-		
-		razunaSlideShowBuilderInsert: function(o) {
-			if(o.widgetMode == undefined) o.widgetMode = false;
-			
-			html = "[RAZUNA_SLIDESHOW=" + $("#razuna_slideshow_delay").val();
-			images = $("#sortable_images > li");
-			images_html = "";
-			max_height = 0;
-			for(i = 0; i < images.length; i++) {
-				img = $(images[i]).children("img");
-				images_html += "," + $(img).attr("src") + ";" + $(img).attr("alt");
-				if($(img).height() > max_height)
-					max_height = $(img).height();
-			}
-			html += "," + max_height + images_html + "]";
-			
-			if(o.widgetMode) {
-				parent.jQuery('#'+o.widgetTextareaId).val(parent.jQuery('#'+o.widgetTextareaId).val()+html);
-				parent.tb_remove();
-			} else {
-				var win = window.dialogArguments || opener || parent || top;
-				if (typeof win.send_to_editor == 'function') {
-					win.send_to_editor(html);
-					if (typeof win.tb_remove == 'function') 
-						win.tb_remove();
-					return false;
-				}
-				
-				tinyMCE = win.tinyMCE;
-				if ( typeof tinyMCE != 'undefined' && tinyMCE.getInstanceById('content') ) {
-					tinyMCE.selectedInstance.getWin().focus();
-					tinyMCE.execCommand('mceInsertContent', false, html);
-				} else win.edInsertContent(win.edCanvas, html);
-			}
-		},
-		
-		razunaSlideShowBuilderInsertImage: function(o) {
-			div = $('#asset_info-' + o.id);
-			asset = JSON.parse($('#asset-' + o.id).val());
-			
-			$("#sortable_images").append('<li class="item"><img src="' + asset.thumbnail + '" alt="' + $(div).find('.alt').val() + '" /></li>');
 		},
 		
 		razunaShare: function(o) {

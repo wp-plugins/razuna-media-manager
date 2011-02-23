@@ -17,13 +17,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-require_once('media-tabs/razuna-browser.php');
-require_once('media-tabs/razuna-slideshow-builder.php');
-
 add_action('media_buttons_context', 'razuna_media_buttons');
 add_action('media_upload_razuna', 'media_upload_razuna');
 add_action('admin_head', 'razuna_media_css');
-add_action('admin_init', 'razuna_load_js');
 
 function razuna_media_buttons($context) {
 	global $post_ID, $temp_ID;
@@ -44,32 +40,56 @@ function media_upload_razuna() {
 }
 
 function media_upload_razuna_form() {
-	if(!isset($_GET['razuna_subtab'])) {
-		$_SERVER['QUERY_STRING'] = "razuna_subtab=browser&". $_SERVER['QUERY_STRING'];
-		$_GET['razuna_subtab'] = 'browser';
-	}
-		
 	$dir = dirname(__FILE__);
 	$pluginRootURL = str_replace('pages', '', get_option('siteurl').substr($dir, strpos($dir, '/wp-content')));
 	?>
-	<!--script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script-->
-	<div id="media-upload-header">
-		<ul id="sidemenu">
-			<li><a href="?<?php _e(preg_replace('/[\\?&]razuna_subtab=([^&#]*)/', 'razuna_subtab=browser', '?'.$_SERVER['QUERY_STRING'])) ?>"<?php if($_GET['razuna_subtab'] == 'browser') { _e('class="current"'); } ?>>Browser</a></li>
-			<li><a href="?<?php _e(preg_replace('/[\\?&]razuna_subtab=([^&#]*)/', 'razuna_subtab=slideshowbuilder', '?'.$_SERVER['QUERY_STRING'])) ?>"<?php if($_GET['razuna_subtab'] == 'slideshowbuilder') { _e('class="current"'); } ?>>Slideshow Builder</a></li>
-		</ul>
+	<div id="razuna_media_wrapper">
+		<form>
+			<div class="razuna_media_navigation">
+				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaOpenUploadDiv({baseUrl: '<?php _e($pluginRootURL); ?>'});">Upload</a>
+				<a href="#" onclick="init();">Refresh</a>
+			</div>
+			<div id="file_browser"></div>
+			<div class="clearer">&nbsp;</div>
+		</form>
 	</div>
+	<div id="razuna_media_wrapper_upload">
+		<form action="" name="up" method="post" enctype="multipart/form-data" id="razuna_uploader_form">
+			<div class="razuna_media_navigation">
+				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaCloseUploadDiv();" style="padding-right:15px;">Close</a>
+			</div>
+			<input type="hidden" name="fa" value="c.apiupload" />
+			<input type="hidden" name="sessiontoken" id="razuna_upload_sessiontoken" />
+			<input type="hidden" name="redirectto" id="razuna_upload_redirecturl" />
+			<input type="file" id="filedata" name="filedata" />
+			into folder
+			<select name="destfolderid" id="razuna_upload_folders"></select>
+			<input type="submit" class="button" value="Upload" id="razuna_upload_button">
+		</form>
+	</div>
+	<script type="text/javascript" src="<?php _e(razuna_plugin_url()); ?>/pages/js/razuna-media-manager.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready( function() {
+			init();
+		});
+		
+		function init() {
+			jQuery('#file_browser').razunaInit({
+				baseUrl: '<?php _e(razuna_plugin_url()); ?>',
+				<?php if($_GET['widgetMode'] == 'true') { ?>
+					widgetMode: true,
+					widgetTextareaId: '<?php _e($_GET['widgetTextareaId']); ?>'
+				<?php } ?>
+			});
+		}
+	</script>
 	<?php
-	if($_GET['razuna_subtab'] == 'browser')
-		tabContentBrowser();
-	else if($_GET['razuna_subtab'] == 'slideshowbuilder')
-		tabContentSlideshowBuilder();
 }
 
 function razuna_media_css() {
 	echo "
 	<style type=\"text/css\">
-		.clearer { clear: both; height: 1px; }
+		.clearer { clear: both; }
 		ul.razunaMediaBrowser { padding: 0px; margin: 0px; }
 		ul.razunaMediaBrowser li {
 			list-style: none;
@@ -101,12 +121,15 @@ function razuna_media_css() {
 		.razunaMediaBrowser li.kind_doc { background: url(" . razuna_plugin_url() . "pages/img/doc.png) left top no-repeat; }
 		.razunaMediaBrowser li.kind_aud { background: url(" . razuna_plugin_url() . "pages/img/aud.png) left top no-repeat; }
 		
-		html { background-color: #FFF; }
+		html, body { background-color: #FFF; height: 100%; width: 100%; }
+		body { margin: 0px; padding: 0px; }
 		form { width: 98%; }
 		#razuna_media_wrapper {
 			width: 640px;
 			top: 0;
-			position: relative;
+			position: absolute;
+			margin: 0;
+			padding: 0;
 		}
 		.asset_info, .asset_info table { width: 100%; }
 		.asset_info table { border: 1px solid #DFDFDF; }
@@ -117,7 +140,10 @@ function razuna_media_css() {
 		.razuna_setting_to_shared_message { font-size: 80%; display: none; }
 		.razuna_share_loading { display: none; }
 		.razuna_share_failed { display: none; color: red; padding-left: 4px; }
-		.razuna_share_answer { display: inline; }
+		.razuna_share_answer {
+			display: inline;
+		}
+		
 		.razuna_media_navigation { text-align: right; float: right; line-height: 16px; }
 		.razuna_media_navigation .wait { padding-left: 16px; height: 16px; text-decoration: none; }
 		#razuna_upload_fields { float: left; }
@@ -143,12 +169,6 @@ function razuna_media_css() {
 		#sortable_images .item { float: left; padding-right: 10px; }
 		#razuna_slideshow_delay { text-align: right; }
 	</style>";
-}
-
-function razuna_load_js() {
-	wp_enqueue_script('razuna-media-manager', razuna_plugin_url()."pages/js/razuna-media-manager.js");
-	wp_enqueue_script('jquery-ui-core');
-	wp_enqueue_script('jquery-ui-sortable');
 }
 
 ?>

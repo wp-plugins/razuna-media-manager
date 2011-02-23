@@ -32,7 +32,7 @@ function tabContentBrowser() {
 	<div id="razuna_media_wrapper_upload">
 		<form action="" name="up" method="post" enctype="multipart/form-data" id="razuna_uploader_form">
 			<div class="razuna_media_navigation">
-				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaCloseUploadDiv();">Close</a>
+				<a href="#" id="razuna_upload_link" onclick="jQuery(this).razunaCloseUploadDiv();" style="margin-right:15px;">Close</a>
 			</div>
 			<input type="hidden" name="fa" value="c.apiupload" />
 			<input type="hidden" name="sessiontoken" id="razuna_upload_sessiontoken" />

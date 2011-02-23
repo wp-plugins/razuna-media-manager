@@ -4,7 +4,7 @@
 Plugin Name: Razuna Media Manager
 Plugin URI: http://razuna.org/whatisrazuna/razunawordpress
 Description: Allows to add Files from your Razuna account into Wordpress posts.
-Version: 0.8.1
+Version: 0.8.5
 Author: Christof Dorner / Razuna Ltd.
 Author URI: http://razuna.org
 
@@ -35,9 +35,7 @@ add_action('init', 'razuna_admin_init');
 add_action('wp_head', 'razuna_frontend_head');
 add_action('wp_head', 'razuna_widget_content_filter');
 add_filter('the_content','razuna_player_content');
-add_filter('widget_content', 'razuna_player_content');
-add_filter('the_content','razuna_slideshow');
-add_filter('widget_content', 'razuna_slideshow');
+
 add_action('widgets_init', create_function('', 'return register_widget("RazunaWidget");'));
 
 function razuna_admin_init() {
@@ -69,9 +67,7 @@ function razuna_admin_start_session() {
 }
 
 function razuna_frontend_head() {
-	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/jquery-1.4.1.js\"></script>\n";
 	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/flowplayer-3.1.4.min.js\"></script>\n";
-	echo "<script type=\"text/javascript\" src=\"". razuna_plugin_url() ."pages/js/jquery.innerfade.js\"></script>\n";
 }
 
 function razuna_player_content($content) {
@@ -99,34 +95,6 @@ function razuna_player_content($content) {
 	return $content;
 }
 
-function razuna_slideshow($content) {
-	$regex = '/\[RAZUNA_SLIDESHOW=([0-9]+)\,([0-9]+)\,([a-z0-9\:\.\-\&\_\/\|\,\;]+)\]/i';
-	$matches = array();
-	preg_match_all($regex, $content, $matches);
-	
-	if($matches[0][0] != '') {
-		$replace = "";
-		foreach($matches[0] as $key => $data) {
-			$nr = rand();
-			$replace .= "<div id=\"razuna_slideshow-". $nr ."\">";
-			$delay = $matches[1][$key];
-			$max_height = $matches[2][$key];
-			$images_str = $matches[3][$key];
-			$images = split(",", $images_str);
-			for($i = 0; $i < count($images); $i++) {
-				$image = split(";", $images[$i]);
-				$replace .= "<div><img src=\"". $image[0] ."\" alt=\"". $image[1] ."\" /></div>";
-			}
-			$replace .= "</div>";
-			$replace .= "<script type=\"text/javascript\">jQuery(\"#razuna_slideshow-". $nr ."\").innerfade({timeout: ". ($delay*1000) .", containerheight: ". $max_height ."});</script>";
-			$content = str_replace($matches[0][$key], $replace, $content);
-			$j++;
-		}
-	}
-	
-	return $content;
-}
-
 function razuna_admin_thickbox() {
 	wp_print_scripts('thickbox');
 	wp_print_styles('thickbox');
@@ -145,28 +113,4 @@ function razuna_get_hosting_type() {
 		return 'self';
 }
 
-function razuna_widget_content_filter() {
-	global $wp_registered_widgets;
-	foreach ($wp_registered_widgets as $id => $widget) {
-		if(!$wp_registered_widgets[$id]['callback_wl_redirect']) {
-			array_push($wp_registered_widgets[$id]['params'],$id);
-			$wp_registered_widgets[$id]['callback_wl_redirect'] = $wp_registered_widgets[$id]['callback'];
-			$wp_registered_widgets[$id]['callback'] = 'razuna_widget_content_filter_callback';
-		}
-	}
-}
-
-function razuna_widget_content_filter_callback() {
-	global $wp_registered_widgets, $wp_reset_query_is_done;
-
-	$params = func_get_args();
-	$id = array_pop($params);
-	$callback = $wp_registered_widgets[$id]['callback_wl_redirect'];
-	
-	ob_start();
-	call_user_func_array($callback, $params);
-	$widget_content = ob_get_contents();
-	ob_end_clean();
-	echo apply_filters('widget_content', $widget_content, $id);
-}
 ?>

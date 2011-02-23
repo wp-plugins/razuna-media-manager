@@ -40,7 +40,7 @@ try {
 	
 	$response['files'] = array();
 	// get folders
-	if($_POST['dir'] == 0)
+	if($_POST['dir'] == '0')
 		$folders = $razuna_api->getRootFolders();
 	else
 		$folders = $razuna_api->getFolders($_POST['dir']);
