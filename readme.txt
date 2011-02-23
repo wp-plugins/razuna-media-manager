@@ -6,7 +6,7 @@ Requires at least: 2.8.0
 Tested up to: 3.0.5
 Stable tag: 0.8.5
 
-This plugin allows to transparently load images, videos, audios and documents from the Razuna Digital Asset Management to your Wordpress site. For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source version at http://www.razuna.org
+This plugin allows to transparently load images, videos, audios and documents from the Razuna Digital Asset Management to your Wordpress site.
 
 == Description ==
 
@@ -18,6 +18,22 @@ You will find a "Razuna" Tab next to your regular "Upload" and "Media Library" t
 For more information regarding Razuna checkout the Hosted (SaaS) Solution at http://www.razuna.com or check out the Open Source version at http://www.razuna.org
 
 Supports WordPress, WordPress MU and BuddyPress
+
+== Installation ==
+
+1. Upload `razuna-media-media-manager` to the `/wp-content/plugins/` directory
+1. Activate the plugin through the "Plugins" menu in WordPress (be sure to activate the plugin site-wide on WordPress MU installations)
+1. Configure the plugin in the "Razuna Configuration" (or "Settings") screen by following the onscreen prompts.
+
+== Frequently Asked Questions ==
+
+= What are the system requirements? =
+
+You can use any PHP version, but we recommend a 5.x one. Furthermorem make sure that you have the SOAP client libraries installed! Without it, the Razuna plugin will not be able to load.
+
+= Which user shall I use to connect to Razuna? =
+
+Currently, you need to be a user in the administration group in order to access the Razuna assets.
 
 == Screenshots ==
 
@@ -68,12 +84,5 @@ Supports WordPress, WordPress MU and BuddyPress
 * First public version
 * Allows to add shared images, videos and documents which are hosted on a Razuna service to your posts
 
-== Installation ==
 
-1. Upload `razuna-media-media-manager` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the "Plugins" menu in WordPress (be sure to activate the plugin site-wide on WordPress MU installations)
-1. Configure the plugin in the "Razuna Configuration" (or "Settings") screen by following the onscreen prompts.
-
-Troubleshooting:
-If you can not connect to your Razuna Server then make sure that your PHP is configured with the SOAP client!
 
