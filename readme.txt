@@ -28,7 +28,7 @@ Supports WordPress, WordPress MU and BuddyPress
 
 = 0.8.5 =
 * Improvement: Showing the UploadBin folder
-* Improvement: Showing all folders for Administrators (except the My Folder)
+* Improvement: Showing all folders for Administrators
 * Improvement: Small Design improvements
 * Bug Fix: Plugin loaded unnecessary jQuery file
 * Bug Fix: Sometimes only certain folders were shown
