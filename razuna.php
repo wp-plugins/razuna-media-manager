@@ -113,4 +113,29 @@ function razuna_get_hosting_type() {
 		return 'self';
 }
 
+function razuna_widget_content_filter() {
+	global $wp_registered_widgets;
+	foreach ($wp_registered_widgets as $id => $widget) {
+		if(!$wp_registered_widgets[$id]['callback_wl_redirect']) {
+			array_push($wp_registered_widgets[$id]['params'],$id);
+			$wp_registered_widgets[$id]['callback_wl_redirect'] = $wp_registered_widgets[$id]['callback'];
+			$wp_registered_widgets[$id]['callback'] = 'razuna_widget_content_filter_callback';
+		}
+	}
+}
+
+function razuna_widget_content_filter_callback() {
+	global $wp_registered_widgets, $wp_reset_query_is_done;
+
+	$params = func_get_args();
+	$id = array_pop($params);
+	$callback = $wp_registered_widgets[$id]['callback_wl_redirect'];
+	
+	ob_start();
+	call_user_func_array($callback, $params);
+	$widget_content = ob_get_contents();
+	ob_end_clean();
+	echo apply_filters('widget_content', $widget_content, $id);
+}
+
 ?>
