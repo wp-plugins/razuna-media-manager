@@ -92,12 +92,12 @@ if(jQuery) (function($){
 				
 				function getHtmlTree(json) {
 					response = '<ul class="razunaMediaBrowser" style="display: none;">';
-					var convert = new Array();
+					//var convert = new Array();
 					for(var i = 0; i < json.files.length; i++) {
 						file = JSON.parse(json.files[i].obj);
-						if(json.files[i].type == 'RazunaAssetConvert') {
+						/*if(json.files[i].type == 'RazunaAssetConvert') {
 							convert[i] = {formaturl:file.formaturl,formattype:file.formattype, formatwidth:file.formatwidth, formatheight:file.formatheight};
-						}
+						}*/
 						if(json.files[i].type == 'RazunaFolder') {
 							response += '<li class="directory collapsed"><a class="asset directory" href="#" rel="' + file.id + '">' + file.name + '</a></li>'
 						} else if(json.files[i].type == 'RazunaAsset') {
@@ -132,7 +132,7 @@ if(jQuery) (function($){
 								response += 			'<td><strong>Size:</strong></td>';
 								response += 			'<td>';
 								response += 				'<div class="image-size-item">';
-								response += 					'<input id="image-size" type="radio" value="thumbnail" class="image-size-thumbnail" name="image" checked="checked" />';
+								response += 					'<input id="image-size" type="radio" value="thumbnail" class="image-size-thumbnail" name="image-'+file.id+'" checked="checked" />';
 								response += 					'<label for="image-size">Thumbnail</label>';
 								response += 				'</div>';
 								response +=				'</td></tr>';
@@ -140,13 +140,41 @@ if(jQuery) (function($){
 								response +=				'<td><strong>&nbsp;</strong></td>';
 								response +=				'<td>';
 								response += 				'<div class="image-size-item">';
-								response += 					'<input id="image-sizeorig" type="radio" value="original" class="image-size-original" name="image" />';
+								response += 					'<input id="image-sizeorig" type="radio" value="original" class="image-size-original" name="image-'+file.id+'" />';
 								response += 					'<label for="image-sizeorig">Original</label>';
 								response += 				'</div>';
 								response += 			'</td>';
 								response += 		'</tr>';
+
 								if(file.hasconvertedformats == 'true'){
-									response += 		'##CONVERT##';
+									var arrString = '';
+									 for (var z = 0; z <= file.convert.length-1; z++){
+										arrString += file.convert[z]+'#!#';
+										if(z%4 == 3)
+											arrString += '#SPACE#';
+									 }
+									
+									var arr = arrString.split('#SPACE#');							
+								
+									var construct = '';
+									var arrFinal = new Array;
+									for (var z = 0; z < arr.length-1 ; z++){
+										arrFinal[z] = arr[z].split('#!#');
+									}
+
+									for (var z = 0; z < arrFinal.length ; z++){
+										arrOut = arrFinal[z];
+										construct +=	'<tr>';
+										construct +=		'<td><strong>&nbsp;</strong></td>';
+										construct +=		'<td>';
+										construct +=		'<div class="image-size-item">';
+										construct +=			'<input type="radio" value="'+arrOut[0]+'" class="image-size-converted" name="image-'+file.id+'" />';
+										construct += 			'<label style="text-transform:uppercase">'+arrOut[1]+' ('+arrOut[2]+' * '+arrOut[3]+' <span style="text-transform:lowercase">px</span>)</label>';
+										construct +=		'</div>';
+										construct +=		'</td>';
+										construct +=	'<tr>';
+									}									
+									response += construct;
 								}
 								response += 		'<tr>';
 								response += 			'<td><strong>Alternate text:</strong></td>';
@@ -164,13 +192,54 @@ if(jQuery) (function($){
 									response += 			'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'\');">None</button>';
 									response += 			'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + file.url + '\');">File Original Size</button>';
 									response += 			'<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + file.thumbnail + '\');">File Thumbnail Size</button>';
-									if(file.hasconvertedformats == 'true'){
-										response += 			'##CONVERTBUTTON##';
-									}
 									response += 		'</td>';
 									response += 	'</tr>';
 								}
 							} else if(file.kind == 'vid' || file.kind == 'aud') {
+
+								response +=	'<tr>';
+								response +=		'<td><strong>&nbsp;</strong></td>';
+								response +=		'<td>';
+								response +=		'<div class="image-size-item">';
+								response +=			'<input type="radio" value="'+file.url+'" class="video" name="image-'+file.id+'" checked="checked"/>';
+								response += 			'<label style="text-transform:uppercase">Original</label>';
+								response +=		'</div>';
+								response +=		'</td>';
+								response +=	'<tr>';
+
+
+
+
+								if(file.hasconvertedformats == 'true'){
+									var arrString = '';
+									 for (var z = 0; z <= file.convert.length-1; z++){
+										arrString += file.convert[z]+'#!#';
+										if(z%4 == 3)
+											arrString += '#SPACE#';
+									 }
+									
+									var arr = arrString.split('#SPACE#');							
+								
+									var construct = '';
+									var arrFinal = new Array;
+									for (var z = 0; z < arr.length-1 ; z++){
+										arrFinal[z] = arr[z].split('#!#');
+									}
+
+									for (var z = 0; z < arrFinal.length ; z++){
+										arrOut = arrFinal[z];
+										construct +=	'<tr>';
+										construct +=		'<td><strong>&nbsp;</strong></td>';
+										construct +=		'<td>';
+										construct +=		'<div class="image-size-item">';
+										construct +=			'<input type="radio"  onclick="jQuery(\'table.describe\').find(\'.player-width\').val('+arrOut[2]+');jQuery(\'table.describe\').find(\'.player-height\').val('+arrOut[3]+');" value="'+arrOut[0]+'" class="video" name="image-'+file.id+'" />';
+										construct += 			'<label style="text-transform:uppercase">'+arrOut[1]+' ('+arrOut[2]+' * '+arrOut[3]+' <span style="text-transform:lowercase">px</span>)</label>';
+										construct +=		'</div>';
+										construct +=		'</td>';
+										construct +=	'<tr>';
+									}									
+									response += construct;
+								}
 								response += 		'<tr>';
 								response += 			'<td><strong>Width:</strong></td>';
 								response += 			'<td><input type="text" class="player-width" value="450" /></td>';
@@ -210,32 +279,6 @@ if(jQuery) (function($){
 						}
 					}
 					response += '</ul>';
-					if(file.hasconvertedformats == 'true'){
-						if(convert != ''){
-							var construct = '';
-							var convertButton = '';
-							for(var i in convert){								
-								construct +=	'<tr>';
-								construct +=		'<td><strong>';
-								if(i == 0)
-									construct += 'Converted formats:';
-								construct +=		'</strong></td>';
-								construct +=		'<td>';
-								construct +=		'<div class="image-size-item">';
-								
-								construct +=			'<input id="image'+i+'" onclick="jQuery(\'.alt\').val(\''+splitAlt(convert[i].formaturl)+'\')" type="radio" value="'+convert[i].formaturl+'" class="image-size-converted" name="image" />';
-								construct += 			'<label for="image'+i+'" style="text-transform:uppercase">'+convert[i].formattype+' ('+convert[i].formatwidth+' * '+convert[i].formatheight+' <span style="text-transform:lowercase">px</span>)</label>';
-								construct +=		'</div>';
-								construct +=		'</td>';
-								construct +=	'<tr>';
-
-								convertButton += '<button class="button" type="button" onclick="jQuery(this).parent().find(\'input\').val(\'' + convert[i].formaturl + '\');" style="text-transform:uppercase">'+convert[i].formattype+'</button>';
-							}
-
-							response = response.replace("##CONVERT##",construct);
-							response = response.replace("##CONVERTBUTTON##",convertButton);
-						}
-					}
 					return response;
 				}
 				
@@ -288,6 +331,9 @@ if(jQuery) (function($){
 						else
 							height = $(div).find('.player-height').val();
 						html = "[RAZUNA_PLAYER=" + asset.url + "," + asset.id + "," + asset.kind + "," + width + "," + height + "]";
+						if($(div).find('.video').is(':checked')){
+							html = "[RAZUNA_PLAYER=" + $(div).find('input.video:checked').val() + "," + asset.id + "," + asset.kind + "," + width + "," + height + "]";
+						}
 					} else {
 						var html = "<a href=\"";
 						if(asset.kind == 'img') {

@@ -335,14 +335,18 @@ class Razuna {
 		
 		$assets = array();
 		if($xml_result->responsecode == 0) {
-			if($xml_result->listassets->asset->hasconvertedformats == 'true'){
-				foreach($xml_result->listassets->asset->convertedformats->theformat as $xml_asset_convert) {
-					$asset =  new RazunaAssetConvert((string)$xml_asset_convert->formaturl, (string)$xml_asset_convert->formatwidth, (string)$xml_asset_convert->formatheight, (string)$xml_asset_convert->formattype);
-					$assets[] = $asset;
-				}
-			}
 			foreach($xml_result->listassets->asset as $xml_asset) {
-				$asset = new RazunaAsset((string)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->folderid, (string)$xml_asset->thumbnail, (string)$xml_asset->hasconvertedformats);
+				if($xml_asset->hasconvertedformats == 'true'){
+					$convert = array();
+					foreach($xml_asset->children()->convertedformats->theformat as $convertObj){
+						$convert[] = (string)$convertObj->formaturl;
+						$convert[] = (string)$convertObj->formattype;
+						$convert[] = (string)$convertObj->formatwidth;
+						$convert[] = (string)$convertObj->formatheight;
+					}
+				}
+				//print_r($convert);
+				$asset = new RazunaAsset((string)$xml_asset->id, (string)$xml_asset->kind, (string)$xml_asset->filename, (string)$xml_asset->extension, (string)$xml_asset->description, (string)$xml_asset->keywords, ((strtoupper($xml_asset->shared) == 'T') ? true : false), (string)$xml_asset->url, (string)$xml_asset->folderid, (string)$xml_asset->thumbnail, (string)$xml_asset->hasconvertedformats, $convert);
 				$assets[] = $asset;
 			}
 		}
@@ -794,8 +798,9 @@ class RazunaAsset {
 	public $folder_id;
 	public $thumbnail;
 	public $hasconvertedformats;
+	public $convert;
 	
-	function __construct($id, $kind, $filename, $extension, $description, $keywords, $shared, $url, $folder_id, $thumbnail = null, $hasconvertedformats = null) {
+	function __construct($id, $kind, $filename, $extension, $description, $keywords, $shared, $url, $folder_id, $thumbnail = null, $hasconvertedformats = null, $convert = null) {
 		$this->id = $id;
 		$this->kind = $kind;
 		$this->filename = $filename;
@@ -807,6 +812,7 @@ class RazunaAsset {
 		$this->folder_id = $folder_id;
 		$this->thumbnail = $thumbnail;
 		$this->hasconvertedformats = $hasconvertedformats;
+		$this->convert = $convert;
 	}
 	
 	public function isAudio() { return ($this->kind == Razuna::ASSET_TYPE_AUDIO); }
