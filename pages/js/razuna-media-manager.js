@@ -232,18 +232,31 @@ if(jQuery) (function($){
 										construct +=		'<td><strong>&nbsp;</strong></td>';
 										construct +=		'<td>';
 										construct +=		'<div class="image-size-item">';
-										construct +=			'<input type="radio"  onclick="jQuery(\'table.describe\').find(\'.player-width\').val('+arrOut[2]+');jQuery(\'table.describe\').find(\'.player-height\').val('+arrOut[3]+');" value="'+arrOut[0]+'" class="video" name="image-'+file.id+'" />';
-										construct += 			'<label style="text-transform:uppercase">'+arrOut[1]+' ('+arrOut[2]+' * '+arrOut[3]+' <span style="text-transform:lowercase">px</span>)</label>';
+										if(file.kind == 'aud')
+											var param = '';
+										else
+											var param = 'onclick="jQuery(\'table.describe\').find(\'.player-width\').val('+arrOut[2]+');jQuery(\'table.describe\').find(\'.player-height\').val('+arrOut[3]+');"';
+
+										construct +=			'<input type="radio"  '+param+' value="'+arrOut[0]+'" class="video" name="image-'+file.id+'" />';
+										if(file.kind != 'aud')
+											construct += 			'<label style="text-transform:uppercase">'+arrOut[1]+' ('+arrOut[2]+' * '+arrOut[3]+' <span style="text-transform:lowercase">px</span>)</label>';
+										else
+											construct += 			'<label style="text-transform:uppercase">'+arrOut[1]+'</label>';
 										construct +=		'</div>';
 										construct +=		'</td>';
 										construct +=	'<tr>';
 									}									
 									response += construct;
 								}
-								response += 		'<tr>';
-								response += 			'<td><strong>Width:</strong></td>';
-								response += 			'<td><input type="text" class="player-width" value="450" /></td>';
-								response += 		'</tr>';
+								if(file.kind == 'vid'){
+									response += 		'<tr>';
+									response += 			'<td><strong>Width:</strong></td>';
+									response += 			'<td><input type="text" class="player-width" value="450" /></td>';
+									response += 		'</tr>';
+									
+								}else{
+									response +=			'<input type="hidden" class="player-width" value="450" />';
+								}
 								if(file.kind == 'vid') {
 									response += 	'<tr>';
 									response += 		'<td><strong>Height:</strong></td>';
