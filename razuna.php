@@ -4,7 +4,7 @@
 Plugin Name: Razuna Media Manager
 Plugin URI: http://razuna.org/whatisrazuna/razunawordpress
 Description: Allows to add Files from your Razuna account into Wordpress posts.
-Version: 0.8.5
+Version: 0.9.0
 Author: Christof Dorner / Razuna Ltd.
 Author URI: http://razuna.org
 
