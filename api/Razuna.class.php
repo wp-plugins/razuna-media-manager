@@ -26,8 +26,8 @@
 *
 
 HISTORY:
-Date US Format	User					Note
-2009/11/01			Sébastien Massiaux		Initial Library
+Date US Format		User						Note
+2009/11/01			Sébastien Massiaux			Initial Library
 2010/01/16			Christof Dorner				Refactored Library
 
 */
@@ -36,26 +36,26 @@ class Razuna {
 	
 	const AUTH_URI							= '/global/api/authentication.cfc?wsdl';
 	const FOLDER_URI						= '/global/api/folder.cfc?wsdl';
-	const COLLECTION_URI				= '/global/api/collection.cfc?wsdl';
+	const COLLECTION_URI					= '/global/api/collection.cfc?wsdl';
 	const HOSTS_URI							= '/global/api/hosts.cfc?wsdl';
 	const SEARCH_URI						= '/global/api/search.cfc?wsdl';
 	const USER_URI							= '/global/api/user.cfc?wsdl';
 	const ASSET_URI							= '/global/api/asset.cfc?wsdl';
 	
-	const HOST_TYPE_ID					= 1;
-	const HOST_TYPE_NAME				= 2;
+	const HOST_TYPE_ID						= 1;
+	const HOST_TYPE_NAME					= 2;
 	
-	const ASSET_TYPE_ALL				= 'all';
-	const ASSET_TYPE_IMAGE			= 'img';
-	const ASSET_TYPE_VIDEO			= 'vid';
-	const ASSET_TYPE_DOCUMENT		= 'doc';
-	const ASSET_TYPE_AUDIO			= 'aud';
+	const ASSET_TYPE_ALL					= 'all';
+	const ASSET_TYPE_IMAGE					= 'img';
+	const ASSET_TYPE_VIDEO					= 'vid';
+	const ASSET_TYPE_DOCUMENT				= 'doc';
+	const ASSET_TYPE_AUDIO					= 'aud';
 	
-	const DOC_TYPE_EMPTY				= 'empty';
-	const DOC_TYPE_PDF					= 'pdf';
-	const DOC_TYPE_EXCEL				= 'xls';
-	const DOC_TYPE_WORD					= 'doc';
-	const DOC_TYPE_OTHER				= 'other';
+	const DOC_TYPE_EMPTY					= 'empty';
+	const DOC_TYPE_PDF						= 'pdf';
+	const DOC_TYPE_EXCEL					= 'xls';
+	const DOC_TYPE_WORD						= 'doc';
+	const DOC_TYPE_OTHER					= 'other';
 	
 	private $soap_authentication;
 	private $soap_folder;
