@@ -4,11 +4,11 @@
 Plugin Name: Razuna Media Manager
 Plugin URI: http://razuna.org/whatisrazuna/razunawordpress
 Description: Allows to add Files from your Razuna account into Wordpress posts.
-Version: 0.9.1
-Author: Christof Dorner / Razuna Ltd.
+Version: 0.9.2
+Author: Razuna APS
 Author URI: http://razuna.org
 
-Copyright (C) 2010 Christof Dorner
+Copyright (C) 2010 Razuna
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,9 +34,17 @@ require_once('pages/razuna-widget.php');
 add_action('init', 'razuna_admin_init');
 add_action('wp_head', 'razuna_frontend_head');
 add_action('wp_head', 'razuna_widget_content_filter');
+
 add_filter('the_content','razuna_player_content');
+add_filter('media_upload_tabs', 'razuna_tab');
 
 add_action('widgets_init', create_function('', 'return register_widget("RazunaWidget");'));
+
+// add the tab
+function razuna_tab($tabs) {
+	$tabs['razuna'] = "Razuna";
+	return $tabs;
+}
 
 function razuna_admin_init() {
 	add_action('admin_menu', 'razuna_admin_config_page');

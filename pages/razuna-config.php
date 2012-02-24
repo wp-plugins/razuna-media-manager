@@ -1,7 +1,7 @@
 <?php
 
 /*
-Copyright (C) 2010 Christof Dorner
+Copyright (C) 2012 Razuna APS
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -94,7 +94,7 @@ function razuna_config() {
 
 function razuna_config_css() {
 	echo "<style type='text/css'>";
-	echo "#icon-razuna { background: transparent url(" . razuna_plugin_url() . "img/razuna-logo-32.png) no-repeat; }";
+	echo "#icon-razuna { background: transparent url(" . razuna_plugin_url() . "/pages/img/razuna-logo-32.png) no-repeat; }";
 	echo ".wait { background: url(" . razuna_plugin_url() . "pages/img/spinner.gif) left top no-repeat; padding-left: 16px; height: 16px; text-decoration: none; }";
 	echo "#razuna_message, #razuna_message p { display: inline; padding: 2px; }";
 	echo "#razuna_message.success { background-color: lightgreen; -moz-border-radius: 3px; border: 1px solid green; }";
